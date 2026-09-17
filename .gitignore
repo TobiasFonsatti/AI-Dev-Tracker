@@ -1,0 +1,15 @@
+# segredos - nunca commitar
+.env
+.env.*
+!.env.example
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+
+# editor / SO
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
