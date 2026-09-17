@@ -30,14 +30,14 @@
 
 ## 3. Stack tecnológica definida
 
-Autenticação ainda tem 2 candidatos em aberto (Auth.js vs. Supabase Auth) — decisão até a E4 (Semana 4), quando o repositório é configurado.
+Decidido na E4 (setup do repositório) — ver README.md.
 
 | Camada | Tecnologia |
 |---|---|
 | Frontend | Next.js (React + TypeScript) |
 | Backend | Next.js (API routes) + Prisma ORM |
 | Banco de dados | PostgreSQL |
-| Autenticação | Candidato 1: Auth.js (NextAuth) com provider de credenciais + middleware de papel · Candidato 2: Supabase Auth · Decisão final até a E4 |
+| Autenticação | Supabase Auth (alternativa avaliada: Auth.js/NextAuth) |
 | Testes | Vitest (unitários da regra de negócio) |
 | CI | GitHub Actions |
 | Deploy | Docker no servidor Oracle Cloud, exposto via Cloudflare Tunnel no domínio próprio |
