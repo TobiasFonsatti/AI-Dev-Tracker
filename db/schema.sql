@@ -6,6 +6,11 @@
 -- original: AUTO_INCREMENT -> SERIAL, ENGINE=InnoDB removido (não existe em
 -- Postgres), TINYINT -> SMALLINT, DATETIME -> TIMESTAMP. Estrutura, nomes de
 -- tabela/coluna e constraints seguem exatamente o DER (docs/der.md).
+--
+-- NOTA (Sprint 1): as tabelas em produção/desenvolvimento são criadas via
+-- `npm run db:push` (prisma/schema.prisma) contra o Postgres hospedado no
+-- Supabase, não executando este arquivo diretamente. Este .sql permanece como
+-- DDL de referência/documentação, fiel ao DER da E3.
 
 CREATE TABLE perfil (
     id_perfil SERIAL PRIMARY KEY,

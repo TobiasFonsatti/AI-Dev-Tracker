@@ -14,7 +14,7 @@ alta dificuldade associadas ao uso frequente de IA).
 
 - **Frontend:** Next.js 14+ (React + TypeScript)
 - **Backend:** Next.js (API Routes) + Prisma ORM
-- **Banco de dados:** PostgreSQL 15+
+- **Banco de dados:** PostgreSQL (hospedado no Supabase, mesmo projeto usado para Auth)
 - **Autenticação:** Supabase Auth
 - **Testes:** Vitest (testes unitários das regras de negócio)
 - **CI:** GitHub Actions
@@ -25,7 +25,7 @@ alta dificuldade associadas ao uso frequente de IA).
 ### Pré-requisitos
 
 - Node.js 20+
-- PostgreSQL 15+ (local ou via um projeto Supabase)
+- Uma conta e um projeto no [Supabase](https://supabase.com) (fornece Auth + Postgres — não precisa instalar Postgres localmente)
 - npm 10+
 
 ### Passo a passo
@@ -39,25 +39,22 @@ alta dificuldade associadas ao uso frequente de IA).
    ```bash
    npm install
    ```
-3. Configure as variáveis de ambiente (copie `.env.example` para `.env` e preencha):
+3. No painel do seu projeto Supabase, clique em **Connect** (topo da página) → aba **ORMs** → **Prisma**, e copie as strings de conexão. Copie também as chaves em **Settings → API**.
+4. Configure as variáveis de ambiente (copie `.env.example` para `.env` e preencha):
 
    | Variável | Descrição |
    |---|---|
-   | `DATABASE_URL` | String de conexão do PostgreSQL, ex.: `postgres://user:pass@localhost:5432/rastreador_ia` |
-   | `NEXT_PUBLIC_SUPABASE_URL` | URL do projeto Supabase usado para autenticação |
-   | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Chave pública (anon) do projeto Supabase |
-   | `SUPABASE_SERVICE_ROLE_KEY` | Chave de serviço do Supabase, usada no backend para operações administrativas |
+   | `DATABASE_URL` | Conexão pooled (transaction mode, porta 6543) — usada pela aplicação em runtime |
+   | `DIRECT_URL` | Conexão direta (session mode, porta 5432) — usada pelo Prisma CLI para migrações/`db push` |
+   | `NEXT_PUBLIC_SUPABASE_URL` | URL do projeto Supabase |
+   | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Chave publishable/anon do projeto Supabase |
+   | `SUPABASE_SERVICE_ROLE_KEY` | Chave secret/service_role do Supabase — nunca expor no client |
 
-4. Crie o banco e rode o schema:
+5. Crie as tabelas no banco a partir do `prisma/schema.prisma` (schema já modelado a partir do DER — `docs/der.md`):
    ```bash
-   psql -U postgres -c "CREATE DATABASE rastreador_ia"
-   psql -U postgres -d rastreador_ia -f db/schema.sql
+   npm run db:push
    ```
-   Em seguida, sincronize o Prisma com o schema existente:
-   ```bash
-   npx prisma generate
-   ```
-5. (Opcional) Popule dados de exemplo — o próprio `db/schema.sql` inclui um seed mínimo com perfis, permissões e um usuário de teste por perfil.
+   `db/schema.sql` continua no repositório como DDL de referência/documentação (o que efetivamente cria as tabelas é o `prisma db push` acima).
 6. Suba o projeto em modo desenvolvimento:
    ```bash
    npm run dev

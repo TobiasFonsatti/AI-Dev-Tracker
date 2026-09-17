@@ -36,7 +36,7 @@ Decidido na E4 (setup do repositório) — ver README.md.
 |---|---|
 | Frontend | Next.js (React + TypeScript) |
 | Backend | Next.js (API routes) + Prisma ORM |
-| Banco de dados | PostgreSQL |
+| Banco de dados | PostgreSQL (hospedado no Supabase — mesmo projeto usado para Auth; não no servidor Oracle Cloud) |
 | Autenticação | Supabase Auth (alternativa avaliada: Auth.js/NextAuth) |
 | Testes | Vitest (unitários da regra de negócio) |
 | CI | GitHub Actions |
