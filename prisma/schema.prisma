@@ -1,0 +1,199 @@
+// Schema gerado a partir do DER (docs/der.md) e do db/schema.sql da E3.
+// Nomes de tabela/coluna em snake_case (via @@map/@map) para bater exatamente
+// com o schema.sql já entregue; nomes de model/campo em PascalCase/camelCase
+// pelo idiomático do Prisma.
+//
+// Simplificação assumida aqui (documentar na Sprint 1): a FK composta
+// sessao_desenvolvimento(id_tarefa, id_projeto) -> tarefa(id_tarefa, id_projeto)
+// do schema.sql virou uma FK simples id_tarefa -> tarefa.id_tarefa. A regra
+// "a tarefa deve pertencer ao mesmo projeto da sessão" fica para validação na
+// camada de aplicação por enquanto, não como constraint de banco.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Perfil {
+  idPerfil  Int     @id @default(autoincrement()) @map("id_perfil")
+  nome      String  @unique @db.VarChar(30)
+  descricao String? @db.VarChar(255)
+
+  usuarios           Usuario[]
+  perfilPermissoes   PerfilPermissao[]
+
+  @@map("perfil")
+}
+
+model Permissao {
+  idPermissao Int    @id @default(autoincrement()) @map("id_permissao")
+  codigo      String @unique @db.VarChar(60)
+  descricao   String @db.VarChar(255)
+
+  perfilPermissoes PerfilPermissao[]
+
+  @@map("permissao")
+}
+
+model PerfilPermissao {
+  idPerfil    Int @map("id_perfil")
+  idPermissao Int @map("id_permissao")
+
+  perfil    Perfil    @relation(fields: [idPerfil], references: [idPerfil])
+  permissao Permissao @relation(fields: [idPermissao], references: [idPermissao])
+
+  @@id([idPerfil, idPermissao])
+  @@map("perfil_permissao")
+}
+
+model Usuario {
+  idUsuario    Int      @id @default(autoincrement()) @map("id_usuario")
+  idPerfil     Int      @map("id_perfil")
+  nome         String   @db.VarChar(120)
+  email        String   @unique @db.VarChar(180)
+  senhaHash    String   @map("senha_hash") @db.VarChar(255)
+  status       String   @default("ATIVO") @db.VarChar(20)
+  dataCadastro DateTime @default(now()) @map("data_cadastro")
+
+  perfil               Perfil                @relation(fields: [idPerfil], references: [idPerfil])
+  usuarioProjetos      UsuarioProjeto[]
+  usuarioTarefas       UsuarioTarefa[]
+  sessoes              SessaoDesenvolvimento[]
+  situacoesAtencao     SituacaoAtencao[]
+
+  @@map("usuario")
+}
+
+model Projeto {
+  idProjeto   Int      @id @default(autoincrement()) @map("id_projeto")
+  nome        String   @db.VarChar(150)
+  descricao   String?
+  dataCriacao DateTime @map("data_criacao") @db.Date
+  status      String   @default("ATIVO") @db.VarChar(20)
+
+  usuarioProjetos UsuarioProjeto[]
+  tarefas         Tarefa[]
+  sessoes         SessaoDesenvolvimento[]
+
+  @@map("projeto")
+}
+
+model UsuarioProjeto {
+  idUsuario       Int      @map("id_usuario")
+  idProjeto       Int      @map("id_projeto")
+  papelNoProjeto  String   @map("papel_no_projeto") @db.VarChar(30)
+  dataEntrada     DateTime @default(now()) @map("data_entrada")
+
+  usuario Usuario @relation(fields: [idUsuario], references: [idUsuario])
+  projeto Projeto @relation(fields: [idProjeto], references: [idProjeto])
+
+  @@id([idUsuario, idProjeto])
+  @@map("usuario_projeto")
+}
+
+model Tarefa {
+  idTarefa   Int      @id @default(autoincrement()) @map("id_tarefa")
+  idProjeto  Int      @map("id_projeto")
+  titulo     String   @db.VarChar(180)
+  descricao  String?
+  status     String   @default("PENDENTE") @db.VarChar(20)
+  prioridade String   @default("MEDIA") @db.VarChar(20)
+  prazo      DateTime? @db.Date
+
+  projeto        Projeto                 @relation(fields: [idProjeto], references: [idProjeto])
+  usuarioTarefas UsuarioTarefa[]
+  sessoes        SessaoDesenvolvimento[]
+
+  @@map("tarefa")
+}
+
+model UsuarioTarefa {
+  idUsuario Int    @map("id_usuario")
+  idTarefa  Int    @map("id_tarefa")
+  papel     String @db.VarChar(30)
+
+  usuario Usuario @relation(fields: [idUsuario], references: [idUsuario])
+  tarefa  Tarefa  @relation(fields: [idTarefa], references: [idTarefa])
+
+  @@id([idUsuario, idTarefa])
+  @@map("usuario_tarefa")
+}
+
+model FerramentaIa {
+  idFerramenta Int     @id @default(autoincrement()) @map("id_ferramenta")
+  nome         String  @unique @db.VarChar(100)
+  fornecedor   String? @db.VarChar(100)
+  versao       String? @db.VarChar(40)
+  ativa        Boolean @default(true)
+
+  sessaoFerramentas SessaoFerramenta[]
+
+  @@map("ferramenta_ia")
+}
+
+model SessaoDesenvolvimento {
+  idSessao       Int      @id @default(autoincrement()) @map("id_sessao")
+  idUsuario      Int      @map("id_usuario")
+  idProjeto      Int      @map("id_projeto")
+  idTarefa       Int?     @map("id_tarefa")
+  dataSessao     DateTime @map("data_sessao") @db.Date
+  duracaoMinutos Int      @map("duracao_minutos")
+  usouIa         Boolean  @default(false) @map("usou_ia")
+  tipoAtividade  String   @map("tipo_atividade") @db.VarChar(60)
+  observacoes    String?
+
+  usuario           Usuario            @relation(fields: [idUsuario], references: [idUsuario])
+  projeto           Projeto            @relation(fields: [idProjeto], references: [idProjeto])
+  tarefa            Tarefa?            @relation(fields: [idTarefa], references: [idTarefa])
+  sessaoFerramentas SessaoFerramenta[]
+  avaliacao         AvaliacaoSessao?
+  situacoesAtencao  SituacaoAtencao[]
+
+  @@map("sessao_desenvolvimento")
+}
+
+model SessaoFerramenta {
+  idSessao     Int @map("id_sessao")
+  idFerramenta Int @map("id_ferramenta")
+
+  sessao     SessaoDesenvolvimento @relation(fields: [idSessao], references: [idSessao])
+  ferramenta FerramentaIa          @relation(fields: [idFerramenta], references: [idFerramenta])
+
+  @@id([idSessao, idFerramenta])
+  @@map("sessao_ferramenta")
+}
+
+model AvaliacaoSessao {
+  idAvaliacao        Int     @id @default(autoincrement()) @map("id_avaliacao")
+  idSessao           Int     @unique @map("id_sessao")
+  produtividade      Int     @db.SmallInt
+  dificuldade        Int     @db.SmallInt
+  confianca          Int     @db.SmallInt
+  foco               Int     @db.SmallInt
+  fluidez            Int     @db.SmallInt
+  qualidadeFeedback  Int     @map("qualidade_feedback") @db.SmallInt
+  observacoes        String?
+
+  sessao SessaoDesenvolvimento @relation(fields: [idSessao], references: [idSessao])
+
+  @@map("avaliacao_sessao")
+}
+
+model SituacaoAtencao {
+  idSituacao         Int      @id @default(autoincrement()) @map("id_situacao")
+  idSessao           Int      @map("id_sessao")
+  idUsuario          Int      @map("id_usuario")
+  motivo             String   @db.VarChar(255)
+  dataIdentificacao  DateTime @map("data_identificacao") @db.Date
+  acompanhada        Boolean  @default(false)
+  observacoes        String?
+
+  sessao  SessaoDesenvolvimento @relation(fields: [idSessao], references: [idSessao])
+  usuario Usuario               @relation(fields: [idUsuario], references: [idUsuario])
+
+  @@map("situacao_atencao")
+}
