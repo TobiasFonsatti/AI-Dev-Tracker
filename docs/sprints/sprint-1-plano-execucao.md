@@ -21,16 +21,12 @@ implementado, autenticação, CRUD principal. Histórias-alvo do backlog
 
 ## Pendências técnicas, em ordem sugerida
 
-### 0. Ajuste de modelo — usuário vs. Supabase Auth (fazer antes do resto)
+### 0. Ajuste de modelo — usuário vs. Supabase Auth ✅ feito
 
-O `schema.prisma`/`db/schema.sql` atuais têm uma coluna `senha_hash` na tabela
-`usuario` — isso ficou redundante desde que decidimos usar Supabase Auth (quem
-guarda e valida senha agora é o Supabase, não a nossa tabela). Trocar
-`senha_hash` por uma coluna `auth_user_id` (UUID, referenciando o usuário do
-Supabase Auth) evita duplicar responsabilidade de segurança e mantém o modelo
-coerente com a stack decidida. Depois de mudar, rodar `npm run db:push` de
-novo e atualizar `docs/der.md` + `db/schema.sql` pra refletir a mudança (igual
-fizemos com a conversão MySQL → Postgres da E3).
+`usuario.senha_hash` foi substituída por `usuario.auth_user_id` (UUID, único,
+referenciando `auth.users` do Supabase). `prisma/schema.prisma`, `db/schema.sql`
+e `docs/der.md` atualizados; `npm run db:push` aplicado no banco (tabela
+estava vazia, sem risco de perda de dado).
 
 ### 1. Autenticação (história #1)
 

@@ -8,6 +8,11 @@
 // do schema.sql virou uma FK simples id_tarefa -> tarefa.id_tarefa. A regra
 // "a tarefa deve pertencer ao mesmo projeto da sessão" fica para validação na
 // camada de aplicação por enquanto, não como constraint de banco.
+//
+// Ajuste da Sprint 1: usuario.senha_hash foi removida — quem autentica e
+// guarda a senha agora é o Supabase Auth. usuario.auth_user_id referencia o
+// id (uuid) do usuário em auth.users (Supabase); a linha em `usuario` é
+// criada logo após o cadastro no Supabase Auth (ver src/app/(auth)/cadastro).
 
 generator client {
   provider = "prisma-client"
@@ -53,9 +58,9 @@ model PerfilPermissao {
 model Usuario {
   idUsuario    Int      @id @default(autoincrement()) @map("id_usuario")
   idPerfil     Int      @map("id_perfil")
+  authUserId   String   @unique @map("auth_user_id") @db.Uuid
   nome         String   @db.VarChar(120)
   email        String   @unique @db.VarChar(180)
-  senhaHash    String   @map("senha_hash") @db.VarChar(255)
   status       String   @default("ATIVO") @db.VarChar(20)
   dataCadastro DateTime @default(now()) @map("data_cadastro")
 

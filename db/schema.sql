@@ -11,6 +11,10 @@
 -- `npm run db:push` (prisma/schema.prisma) contra o Postgres hospedado no
 -- Supabase, não executando este arquivo diretamente. Este .sql permanece como
 -- DDL de referência/documentação, fiel ao DER da E3.
+--
+-- NOTA (Sprint 1): usuario.senha_hash foi substituída por usuario.auth_user_id
+-- (UUID) — quem autentica e guarda a senha agora é o Supabase Auth, não esta
+-- tabela. Ver docs/sprints/sprint-1-plano-execucao.md, item 0.
 
 CREATE TABLE perfil (
     id_perfil SERIAL PRIMARY KEY,
@@ -39,11 +43,12 @@ CREATE TABLE perfil_permissao (
 CREATE TABLE usuario (
     id_usuario SERIAL PRIMARY KEY,
     id_perfil INT NOT NULL,
+    auth_user_id UUID NOT NULL, -- referencia auth.users(id) do Supabase Auth
     nome VARCHAR(120) NOT NULL,
     email VARCHAR(180) NOT NULL,
-    senha_hash VARCHAR(255) NOT NULL,
     status VARCHAR(20) NOT NULL DEFAULT 'ATIVO',
     data_cadastro TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT uq_usuario_auth_user_id UNIQUE (auth_user_id),
     CONSTRAINT uq_usuario_email UNIQUE (email),
     CONSTRAINT ck_usuario_status CHECK (status IN ('ATIVO', 'INATIVO', 'BLOQUEADO')),
     CONSTRAINT fk_usuario_perfil
@@ -192,9 +197,9 @@ WHERE (p.nome = 'ADMINISTRADOR')
    OR (p.nome = 'GESTOR' AND pe.codigo = 'DASHBOARD_CONSULTAR')
    OR (p.nome = 'DESENVOLVEDOR' AND pe.codigo = 'SESSAO_REGISTRAR');
 
-INSERT INTO usuario (id_perfil, nome, email, senha_hash, status)
+INSERT INTO usuario (id_perfil, nome, email, auth_user_id, status)
 SELECT id_perfil, 'Usuário Exemplo', 'usuario.exemplo@exemplo.com',
-       '$2b$12$hash_de_exemplo_nao_utilizar_em_producao', 'ATIVO'
+       '00000000-0000-0000-0000-000000000000', 'ATIVO'
 FROM perfil
 WHERE nome = 'DESENVOLVEDOR';
 

@@ -47,9 +47,9 @@ erDiagram
   USUARIO {
     INT id_usuario PK
     INT id_perfil FK
+    UUID auth_user_id UK
     VARCHAR nome
     VARCHAR email UK
-    VARCHAR senha_hash
     VARCHAR status
     DATETIME data_cadastro
   }
@@ -162,9 +162,9 @@ Chave primária composta: (`id_perfil`, `id_permissao`).
 |---|---|---|---|
 | id_usuario | INT | PK, NOT NULL, AUTO_INCREMENT | Identificador único do usuário. |
 | id_perfil | INT | FK, NOT NULL | Perfil de acesso associado ao usuário. |
+| auth_user_id | UUID | UK, NOT NULL | Referência ao usuário correspondente no Supabase Auth (`auth.users`) — autenticação e senha são geridas lá, não nesta tabela. |
 | nome | VARCHAR(120) | NOT NULL | Nome completo do usuário. |
 | email | VARCHAR(180) | UK, NOT NULL | E-mail usado para identificação e login. |
-| senha_hash | VARCHAR(255) | NOT NULL | Senha armazenada em formato criptografado ou hash. |
 | status | VARCHAR(20) | NOT NULL, DEFAULT 'ATIVO' | Situação da conta: ATIVO, INATIVO ou BLOQUEADO. |
 | data_cadastro | DATETIME | NOT NULL, DEFAULT CURRENT_TIMESTAMP | Data e hora de criação do cadastro. |
 
