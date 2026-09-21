@@ -64,21 +64,20 @@ Acesso restrito a quem tem perfil ADMINISTRADOR (`exigirAdmin()` em
 `src/lib/usuario-atual.ts`). Testado promovendo um usuário de teste pra
 ADMINISTRADOR direto no banco e validando as 3 telas.
 
-### 5. Testes
+### 5. Testes ✅ feito
 
-- [ ] Configurar Vitest no projeto (`npm install -D vitest`, script `test` no `package.json`)
-- [ ] Escrever os testes unitários mais simples do plano (`docs/plano-de-testes.md`): CT03 (nome de projeto vazio), CT09 (duração ≤ 0), CT17 (campo obrigatório vazio)
-- [ ] Rodar manualmente os cenários de CT01, CT02, CT04 (dependem de auth/CRUD, não são unitários)
+Vitest configurado (`npm run test`), 11 testes unitários cobrindo CT03, CT17,
+validação de cadastro e a validação de duração de sessão (CT09, escrita com
+antecedência — a tela em si é Sprint 2). Cenários manuais de CT01, CT02, CT04,
+CT05, CT06, CT07 verificados ponta a ponta no navegador contra o Supabase real.
 
-## Depois que houver algo funcionando: os 4 documentos da entrega
+## Os 4 documentos da entrega
 
-Só fazem sentido depois dos itens técnicos acima — não dá pra descrever
-incremento ou evidência de algo que não existe ainda.
-
-1. **`sprint-1-evidencias-teste.md`** — resultado real de cada CT executado (passou/falhou)
-2. **`sprint-1-retrospectiva.md`** — feita **em conjunto** pelos dois na Sprint Review, não sozinho
-3. **`sprint-1-contribuicao-artur.md`** e **`sprint-1-contribuicao-tobias.md`** — um por pessoa, honesto, cruza com o histórico de commits
-4. **`sprint-1-relatorio.md`** — documento-capa: planejado vs. entregue, link/demo, linka os outros 3
+1. **[`sprint-1-relatorio.md`](sprint-1-relatorio.md)** ✅ escrito — factual, sem pendência
+2. **[`sprint-1-evidencias-teste.md`](sprint-1-evidencias-teste.md)** ✅ escrito — factual, sem pendência
+3. **[`sprint-1-retrospectiva.md`](sprint-1-retrospectiva.md)** ⏳ estrutura pronta, reflexão pendente — **precisa ser feita em conjunto pelos dois**
+4. **[`sprint-1-contribuicao-tobias.md`](sprint-1-contribuicao-tobias.md)** ⏳ rascunho pronto, revisar e completar seções 3–4
+5. **[`sprint-1-contribuicao-artur.md`](sprint-1-contribuicao-artur.md)** ❌ em branco — Artur não participou desta sessão, ver nota no próprio arquivo
 
 ## Retomando de onde parou
 

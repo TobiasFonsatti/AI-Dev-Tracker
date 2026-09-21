@@ -26,3 +26,15 @@ Legenda — **Prioridade (MoSCoW):** Must = obrigatório para o MVP · Should = 
 | 16 | [Sistema] Como usuário do sistema, quero que os dados informados sejam validados na tela e no banco, para que as informações fiquem sempre consistentes. | Campos obrigatórios validados antes do envio; constraints no banco (NOT NULL, UNIQUE, FK) equivalentes; erro específico por campo | Must | M | Sprint 4 |
 | 17 | [Sistema] Como avaliador do projeto, quero acessar a aplicação publicamente por uma URL, para que eu possa testá-la sem rodar localmente. | Aplicação hospedada em ambiente público e acessível; URL estável durante a avaliação | Must | M | Sprint 4 |
 | 18 | [Sistema] Como avaliador do projeto, quero encontrar um README completo no repositório, para que eu consiga rodar o projeto do zero sem depender da equipe. | README documenta stack, pré-requisitos, instalação e execução; um terceiro consegue seguir sem dúvidas adicionais | Must | P | Sprint 4 |
+
+## Atualização de status — Sprint 1 (E5)
+
+| # | História | Status | Observação |
+|---|---|---|---|
+| 1 | Cadastro e login | ✅ Concluída | Supabase Auth; testado ponta a ponta |
+| 2 | Cadastro de projetos | ✅ Concluída | `/projetos` |
+| 3 | Cadastro de tarefas | ✅ Concluída | `/projetos/[id]` |
+| 4 | Gestão de usuários | ✅ Concluída | `/admin/usuarios` |
+| 5 | Permissões por perfil | ✅ Concluída | `/admin/permissoes` |
+| 6 | Catálogo de ferramentas de IA | ✅ Concluída | `/admin/ferramentas-ia` |
+| 7–10 | Sessão de IA, avaliação, situação de atenção | ⏳ Planejada | Sprint 2 |
