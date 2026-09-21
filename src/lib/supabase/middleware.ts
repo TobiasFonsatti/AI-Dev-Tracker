@@ -24,7 +24,24 @@ export async function updateSession(request: NextRequest) {
   );
 
   // necessário para manter a sessão viva — não remover
-  await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const path = request.nextUrl.pathname;
+  const rotaPublica = path === "/login" || path === "/cadastro";
+
+  if (!user && !rotaPublica && path !== "/") {
+    const url = request.nextUrl.clone();
+    url.pathname = "/login";
+    return NextResponse.redirect(url);
+  }
+
+  if (user && rotaPublica) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/projetos";
+    return NextResponse.redirect(url);
+  }
 
   return supabaseResponse;
 }

@@ -28,34 +28,41 @@ referenciando `auth.users` do Supabase). `prisma/schema.prisma`, `db/schema.sql`
 e `docs/der.md` atualizados; `npm run db:push` aplicado no banco (tabela
 estava vazia, sem risco de perda de dado).
 
-### 1. Autenticação (história #1)
+### 1. Autenticação (história #1) ✅ feito e testado
 
-- [ ] Página `/cadastro` — formulário de e-mail/senha usando `supabase.auth.signUp`
-- [ ] Página `/login` — `supabase.auth.signInWithPassword`
-- [ ] Ao cadastrar no Supabase Auth, criar a linha correspondente na tabela `usuario` (perfil padrão: Desenvolvedor)
-- [ ] Middleware (`src/middleware.ts`, já existe o esqueleto) redirecionando pra `/login` quem não está autenticado
-- [ ] Botão de logout
+Páginas `/cadastro` e `/login` (Supabase Auth), criação automática da linha em
+`usuario` (perfil padrão Desenvolvedor) logo após o `signUp`, middleware
+protegendo rotas autenticadas/redirecionando quem já está logado pra fora de
+`/login`, `/cadastro`, e logout. Testado ponta a ponta no navegador: cadastro
+→ confirmação de e-mail (ver nota abaixo) → login → sessão refletida na navbar.
 
-### 2. CRUD de Projetos (história #2)
+> **Nota:** o Supabase exige confirmação de e-mail antes do primeiro login por
+> padrão. Pra desenvolvimento, considerem desativar isso em
+> **Authentication → Sign In / Providers → Email → "Confirm email"** no painel
+> do Supabase — assim ninguém trava testando o cadastro. Criei também
+> `scripts/confirmar-usuario-teste.mjs` (usa a Admin API do Supabase) pra
+> confirmar um e-mail manualmente sem mexer na config, se preferirem manter a
+> confirmação ligada.
 
-- [ ] Rota `/projetos` — lista os projetos do usuário logado
-- [ ] Formulário de criação (nome + descrição)
-- [ ] Validação: nome não pode ser vazio (interface + já garantido pelo banco via `NOT NULL`)
+### 2. CRUD de Projetos (história #2) ✅ feito e testado
 
-### 3. CRUD de Tarefas (história #3)
+Rota `/projetos` lista os projetos do usuário logado (via `usuario_projeto`) e
+tem formulário de criação. Testado: criar projeto funciona, aparece na lista.
 
-- [ ] Rota `/projetos/[id]` — lista tarefas do projeto, com status
-- [ ] Formulário de criação de tarefa (vinculada ao projeto da URL)
+### 3. CRUD de Tarefas (história #3) ✅ feito e testado
 
-### 4. Administração (histórias #4, #5, #6) — se sobrar tempo na sprint
+Rota `/projetos/[id]` lista tarefas do projeto com troca de status inline, e
+formulário de criação. Testado: criar tarefa e mudar status refletem no banco.
 
-Mais complexas que as anteriores; se o tempo apertar, negociar levar pra
-Sprint 2 é preferível a entregar pela metade (ver §10 do Manual sobre redução
-de escopo negociada x abandono silencioso).
+### 4. Administração (histórias #4, #5, #6) ✅ feito e testado
 
-- [ ] `/admin/usuarios` — listar, desativar conta
-- [ ] `/admin/permissoes` — tela simples de associar permissão a perfil
-- [ ] `/admin/ferramentas-ia` — CRUD do catálogo de ferramentas
+- `/admin/usuarios` — lista usuários, ativa/desativa conta
+- `/admin/permissoes` — matriz perfil × permissão, clique pra conceder/revogar
+- `/admin/ferramentas-ia` — lista, cadastra, ativa/desativa ferramentas
+
+Acesso restrito a quem tem perfil ADMINISTRADOR (`exigirAdmin()` em
+`src/lib/usuario-atual.ts`). Testado promovendo um usuário de teste pra
+ADMINISTRADOR direto no banco e validando as 3 telas.
 
 ### 5. Testes
 
