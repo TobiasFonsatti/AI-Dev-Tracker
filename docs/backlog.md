@@ -38,3 +38,13 @@ Legenda — **Prioridade (MoSCoW):** Must = obrigatório para o MVP · Should = 
 | 5 | Permissões por perfil | ✅ Concluída | `/admin/permissoes` |
 | 6 | Catálogo de ferramentas de IA | ✅ Concluída | `/admin/ferramentas-ia` |
 | 7–10 | Sessão de IA, avaliação, situação de atenção | ⏳ Planejada | Sprint 2 |
+
+## Atualização de status — Sprint 2 (E6)
+
+| # | História | Status | Observação |
+|---|---|---|---|
+| 7 | Registrar sessão de desenvolvimento | ⏳ [preencher] | [preencher — ex.: /sessoes/nova] |
+| 8 | Avaliação de produtividade, dificuldade e confiança | ⏳ [preencher] | [preencher] |
+| 9 | Avaliação de foco, fluidez e qualidade do feedback (Should) | ⏳ [preencher] | [preencher] |
+| 10 | Identificação automática de situações de atenção | ⏳ [preencher] | Critério: últimas 5 sessões com IA; confiança média < 2,5 OU dificuldade média > 3,5 |
+| 11–15 | Dashboard, histórico, filtros, evolução | ⏳ Planejada | Sprint 3 |
