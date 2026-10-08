@@ -43,8 +43,8 @@ Legenda — **Prioridade (MoSCoW):** Must = obrigatório para o MVP · Should = 
 
 | # | História | Status | Observação |
 |---|---|---|---|
-| 7 | Registrar sessão de desenvolvimento | ⏳ [preencher] | [preencher — ex.: /sessoes/nova] |
-| 8 | Avaliação de produtividade, dificuldade e confiança | ⏳ [preencher] | [preencher] |
-| 9 | Avaliação de foco, fluidez e qualidade do feedback (Should) | ⏳ [preencher] | [preencher] |
-| 10 | Identificação automática de situações de atenção | ⏳ [preencher] | Critério: últimas 5 sessões com IA; confiança média < 2,5 OU dificuldade média > 3,5 |
+| 7 | Registrar sessão de desenvolvimento | ✅ Concluída | Formulário completo em `/sessoes/nova` |
+| 8 | Avaliação de produtividade, dificuldade e confiança | ✅ Concluída | Escala 1–5 vinculada à sessão no banco |
+| 9 | Avaliação de foco, fluidez e qualidade do feedback (Should) | ✅ Concluída | Exibição condicional no formulário quando `usou_ia = true` |
+| 10 | Identificação automática de situações de atenção | ✅ Concluída | Critério: últimas 5 sessões com IA; confiança média < 2,5 OU dificuldade média > 3,5 |
 | 11–15 | Dashboard, histórico, filtros, evolução | ⏳ Planejada | Sprint 3 |

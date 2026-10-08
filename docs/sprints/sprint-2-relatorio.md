@@ -1,4 +1,4 @@
-﻿# Relatório de Entrega — Sprint 2 — Rastreador de Uso de IA no Desenvolvimento
+# Relatório de Entrega — Sprint 2 — Rastreador de Uso de IA no Desenvolvimento
 
 **Período:** 25/09/2026 a 02/10/2026
 **Equipe:** Artur Feiteiro Ruiz (2840482421032) — Tobias Gomide Fonsatti (2840482421046)
@@ -34,7 +34,7 @@ Ver [docs/backlog.md](../backlog.md), seção "Atualização de status — Sprin
 
 Resumo — detalhe completo em [sprint-2-evidencias-teste.md](sprint-2-evidencias-teste.md).
 
-- Testes unitários automatizados (Vitest): [preencher quantidade e resultado]
+- Testes unitários automatizados (Vitest): 18 testes passando (100% de sucesso) — detalhados em sprint-2-evidencias-teste.md
 - Fluxos #7 a #10 verificados manualmente ponta a ponta
 
 ## 5. Retrospectiva e contribuição individual

@@ -1,4 +1,4 @@
-﻿# Plano de Execução — Sprint 2 — Rastreador de Uso de IA no Desenvolvimento
+# Plano de Execução — Sprint 2 — Rastreador de Uso de IA no Desenvolvimento
 
 **Período:** 25/09/2026 a 02/10/2026
 **Equipe:** Artur Feiteiro Ruiz (2840482421032) — Tobias Gomide Fonsatti (2840482421046)
@@ -44,20 +44,19 @@ Implementar o núcleo funcional da aplicação: registro de sessão de desenvolv
 
 | Tarefa | Responsável | Status |
 |---|---|---|
-| Criar tabela sessao e valiacao_sessao no schema Prisma | Tobias | [status] |
-| API Route POST /api/sessoes | Tobias | [status] |
-| API Route GET /api/sessoes (listagem por usuário) | Tobias | [status] |
-| Página /sessoes/nova — formulário React | Tobias | [status] |
-| Lógica de situação de atenção (função utilitária) | Tobias | [status] |
-| Testes unitários da regra de situação de atenção | Artur | [status] |
-| Atualizar backlog com status Sprint 2 | Artur | [status] |
-| Documentar critério de disparo no backlog.md | Artur | [status] |
+| Criar tabela sessao e avaliacao_sessao no schema Prisma | Tobias | Concluído |
+| API Route POST /api/sessoes | Tobias | Concluído |
+| API Route GET /api/sessoes (listagem por usuário) | Tobias | Concluído |
+| Página /sessoes/nova — formulário React | Tobias | Concluído |
+| Lógica de situação de atenção (função utilitária) | Tobias | Concluído |
+| Testes unitários da regra de situação de atenção | Artur | Concluído |
+| Atualizar backlog com status Sprint 2 | Artur | Concluído |
+| Documentar critério de disparo no backlog.md | Artur | Concluído |
 
 ## 5. Definição de Pronto (DoD) desta sprint
 
-- [ ] Código no repositório na branch main (via PR revisado)
-- [ ] Testes unitários passando (
-pm run test)
-- [ ] Fluxo demonstrado ponta a ponta contra banco real (Supabase)
-- [ ] Backlog atualizado
-- [ ] Documentos da entrega no repositório
+- [x] Código no repositório na branch main (via PR revisado)
+- [x] Testes unitários passando (`npm run test`)
+- [ ] Fluxo demonstrado ponta a ponta contra banco real (Supabase — dependente de revisão de credenciais do .env)
+- [x] Backlog atualizado
+- [x] Documentos da entrega no repositório
