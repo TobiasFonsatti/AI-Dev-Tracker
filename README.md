@@ -1,4 +1,4 @@
-# Rastreador de Uso de IA no Desenvolvimento
+# AI-Dev-Tracker — Rastreador de Uso de IA no Desenvolvimento
 
 Plataforma web para registrar e acompanhar o uso de ferramentas de inteligência
 artificial durante atividades de desenvolvimento de software, permitindo que
@@ -6,69 +6,145 @@ desenvolvedores documentem suas sessões de trabalho e que gestores/professores
 identifiquem padrões de uso e situações de atenção (ex.: baixa confiança ou
 alta dificuldade associadas ao uso frequente de IA).
 
-**Deploy:** ainda não publicado — previsto para deploy no servidor próprio
-(Oracle Cloud, via Cloudflare Tunnel) mais adiante no semestre.
-**Equipe:** Artur Feiteiro Ruiz (RA 2840482421032) — Tobias Gomide Fonsatti (RA 2840482421046) · Laboratório de Engenharia de Software · ADS Fatec Ribeirão Preto
+## Integrantes
 
-## Stack
+| Nome | RA | Papel |
+|---|---|---|
+| Artur Feiteiro Ruiz | 2840482421032 | Desenvolvedor |
+| Tobias Gomide Fonsatti | 2840482421046 | Desenvolvedor |
 
-- **Frontend:** Next.js 14+ (React + TypeScript)
-- **Backend:** Next.js (API Routes) + Prisma ORM
-- **Banco de dados:** PostgreSQL (hospedado no Supabase, mesmo projeto usado para Auth)
-- **Autenticação:** Supabase Auth
-- **Testes:** Vitest (testes unitários das regras de negócio)
-- **CI:** GitHub Actions
-- **Deploy (planejado):** Docker em servidor próprio (Oracle Cloud), exposto via Cloudflare Tunnel em domínio próprio
+**Trilha:** A1 · Laboratório de Engenharia de Software · ADS Fatec Ribeirão Preto, 2026
+
+## Status do Deploy
+
+| Ambiente | Status |
+|---|---|
+| **Local (desenvolvimento)** | ✅ Funcional — `npm run dev` na porta 3000 |
+| **Produção** | 🔜 Previsto para deploy em servidor próprio (Oracle Cloud, via Cloudflare Tunnel) mais adiante no semestre |
+
+> Atualmente, a aplicação roda apenas em ambiente local. As instruções para
+> reproduzir o ambiente estão detalhadas na seção **Como rodar localmente**.
+
+## Stack Tecnológica
+
+| Tecnologia | Versão | Uso |
+|---|---|---|
+| [Next.js](https://nextjs.org/) | 16.3.5 | Framework full-stack (React + API Routes) |
+| [React](https://react.dev/) | 19.2.8 | Biblioteca de UI |
+| [TypeScript](https://www.typescriptlang.org/) | ^5 | Tipagem estática |
+| [Prisma ORM](https://www.prisma.io/) | 7.10.0 | ORM + migrações de banco de dados |
+| [PostgreSQL](https://www.postgresql.org/) | — | Banco de dados relacional (hospedado no Supabase) |
+| [Supabase Auth](https://supabase.com/auth) | @supabase/ssr 0.12.7 | Autenticação de usuários |
+| [Tailwind CSS](https://tailwindcss.com/) | ^4 | Estilização |
+| [Vitest](https://vitest.dev/) | ^5.0.1 | Testes unitários |
+| [ESLint](https://eslint.org/) | ^9 | Linting |
+| [Node.js](https://nodejs.org/) | 24+ (recomendado) | Runtime JavaScript |
+| npm | 11+ | Gerenciador de pacotes |
 
 ## Como rodar localmente
 
 ### Pré-requisitos
 
-- Node.js 20+
-- Uma conta e um projeto no [Supabase](https://supabase.com) (fornece Auth + Postgres — não precisa instalar Postgres localmente)
-- npm 10+
+- **Node.js** 20 ou superior (recomendado: 24+) — [download](https://nodejs.org/)
+- **npm** 10 ou superior (vem incluso com o Node.js)
+- Uma conta e um projeto no [Supabase](https://supabase.com) (fornece Auth + PostgreSQL — **não** precisa instalar Postgres localmente)
+- **Git** — [download](https://git-scm.com/)
 
 ### Passo a passo
 
-1. Clone o repositório:
+1. **Clone o repositório:**
    ```bash
    git clone https://github.com/TobiasFonsatti/AI-Dev-Tracker.git
    cd AI-Dev-Tracker
    ```
-2. Instale as dependências:
+
+2. **Instale as dependências:**
    ```bash
    npm install
    ```
-3. No painel do seu projeto Supabase, clique em **Connect** (topo da página) → aba **ORMs** → **Prisma**, e copie as strings de conexão. Copie também as chaves em **Settings → API**.
-4. Configure as variáveis de ambiente (copie `.env.example` para `.env` e preencha):
+   > O script `postinstall` executa `prisma generate` automaticamente.
 
-   | Variável | Descrição |
-   |---|---|
-   | `DATABASE_URL` | Conexão pooled (transaction mode, porta 6543) — usada pela aplicação em runtime |
-   | `DIRECT_URL` | Conexão direta (session mode, porta 5432) — usada pelo Prisma CLI para migrações/`db push` |
-   | `NEXT_PUBLIC_SUPABASE_URL` | URL do projeto Supabase |
-   | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Chave publishable/anon do projeto Supabase |
-   | `SUPABASE_SERVICE_ROLE_KEY` | Chave secret/service_role do Supabase — nunca expor no client |
+3. **Configure as variáveis de ambiente:**
+   ```bash
+   cp .env.example .env
+   ```
+   Abra o ficheiro `.env` e preencha cada variável com os valores do seu projeto Supabase (veja a seção [Variáveis de Ambiente](#variáveis-de-ambiente) abaixo).
 
-5. Crie as tabelas no banco a partir do `prisma/schema.prisma` (schema já modelado a partir do DER — `docs/der.md`):
+4. **Crie as tabelas no banco de dados:**
    ```bash
    npm run db:push
    ```
-   `db/schema.sql` continua no repositório como DDL de referência/documentação (o que efetivamente cria as tabelas é o `prisma db push` acima).
-6. Suba o projeto em modo desenvolvimento:
+   Este comando executa `prisma db push` e cria as tabelas definidas em `prisma/schema.prisma`.
+
+   > `db/schema.sql` permanece no repositório como DDL de referência/documentação.
+
+5. **(Opcional) Popule o banco com dados iniciais:**
+   ```bash
+   npm run db:seed
+   ```
+
+6. **Inicie o servidor de desenvolvimento:**
    ```bash
    npm run dev
    ```
-7. Acesse em `http://localhost:3000`
+
+7. **Acesse a aplicação:**
+   Abra o navegador em [http://localhost:3000](http://localhost:3000)
+
+### Scripts disponíveis
+
+| Script | Comando | Descrição |
+|---|---|---|
+| `dev` | `npm run dev` | Inicia o servidor Next.js em modo de desenvolvimento |
+| `build` | `npm run build` | Gera o build de produção |
+| `start` | `npm run start` | Inicia o servidor de produção |
+| `lint` | `npm run lint` | Executa o ESLint |
+| `test` | `npm run test` | Executa os testes com Vitest |
+| `db:push` | `npm run db:push` | Sincroniza o schema Prisma com o banco |
+| `db:seed` | `npm run db:seed` | Popula o banco com dados iniciais |
+
+## Variáveis de Ambiente
+
+Copie o ficheiro [`.env.example`](.env.example) para `.env` e preencha os valores.
+
+| Variável | Onde encontrar | Descrição |
+|---|---|---|
+| `DATABASE_URL` | Supabase → **Connect** → ORMs → Prisma | Conexão pooled (transaction mode, porta 6543) — usada pela aplicação em runtime |
+| `DIRECT_URL` | Supabase → **Connect** → ORMs → Prisma | Conexão direta (session mode, porta 5432) — usada pelo Prisma CLI para migrações/`db push` |
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase → **Settings** → API | URL pública do projeto Supabase |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase → **Settings** → API | Chave publishable/anon (pode ser exposta no client) |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase → **Settings** → API | Chave secret/service_role — **nunca expor no client** |
+
+> ⚠️ Nunca faça commit do ficheiro `.env` real. Ele já está listado no `.gitignore`.
 
 ## Estrutura do repositório
 
 ```
-/src/app       — rotas e páginas do Next.js (App Router)
-/src/app/api   — API Routes (backend)
-/prisma        — schema.prisma e migrations
-/db            — schema.sql (DDL de referência, gerado a partir do DER)
-/docs          — documento de visão, backlog, UML, DER, plano de testes, protótipo
+AI-Dev-Tracker/
+├── src/
+│   ├── app/            ← Rotas e páginas do Next.js (App Router)
+│   │   ├── api/        ← API Routes (backend)
+│   │   └── (auth)/     ← Rotas de autenticação (login, cadastro)
+│   └── generated/
+│       └── prisma/     ← Client Prisma gerado (não editar manualmente)
+├── prisma/
+│   ├── schema.prisma   ← Schema do banco de dados
+│   └── seed.ts         ← Script de seed
+├── db/
+│   └── schema.sql      ← DDL de referência (gerado a partir do DER)
+├── docs/               ← Documentação do projeto
+│   ├── backlog.md
+│   ├── declaracao-de-escopo.md
+│   ├── der.md
+│   ├── documento-de-visao.md
+│   ├── plano-de-testes.md
+│   ├── prototipo.md
+│   ├── termo-de-aceite-projeto.md
+│   ├── uml.md
+│   └── sprints/        ← Retrospectivas de sprint
+├── .env.example        ← Template de variáveis de ambiente
+├── package.json
+└── README.md           ← Este ficheiro
 ```
 
 ## Convenções da equipe
@@ -80,7 +156,11 @@ alta dificuldade associadas ao uso frequente de IA).
 
 ## Testes
 
-Como rodar: `npm run test` (Vitest)
+```bash
+npm run test
+```
+
+Executa os testes unitários com [Vitest](https://vitest.dev/).
 
 Ver estratégia completa em [`docs/plano-de-testes.md`](docs/plano-de-testes.md).
 
