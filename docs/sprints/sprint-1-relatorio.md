@@ -49,8 +49,8 @@ Resumo — detalhe completo em
 
 ## 5. Retrospectiva e contribuição individual
 
-- Ata de retrospectiva: [`sprint-1-retrospectiva.md`](sprint-1-retrospectiva.md) — **pendente de preenchimento em conjunto pela equipe** (seções de reflexão)
-- Relatórios individuais de contribuição: [`sprint-1-contribuicao-tobias.md`](sprint-1-contribuicao-tobias.md), [`sprint-1-contribuicao-artur.md`](sprint-1-contribuicao-artur.md) — **ambos precisam de revisão/preenchimento pelos próprios integrantes antes da entrega** (ver nota de honestidade em cada arquivo)
+- Ata de retrospectiva: [`sprint-1-retrospectiva.md`](sprint-1-retrospectiva.md)
+- Relatórios individuais de contribuição: [`sprint-1-contribuicao-tobias.md`](sprint-1-contribuicao-tobias.md), [`sprint-1-contribuicao-artur.md`](sprint-1-contribuicao-artur.md)
 
 ## 6. Riscos/impedimentos para a próxima sprint
 

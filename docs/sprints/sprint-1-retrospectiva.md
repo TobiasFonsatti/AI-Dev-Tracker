@@ -1,12 +1,7 @@
 # Ata de Retrospectiva — Sprint 1 — Rastreador de Uso de IA no Desenvolvimento
 
-> **Pendente:** esta ata precisa ser preenchida pela equipe, junto, logo após a
-> Sprint Review — não é algo que uma IA deveria redigir sozinha em nome de
-> vocês. Deixei a estrutura e alguns fatos objetivos prontos; as seções 2 a 4
-> são reflexão de vocês dois.
-
-**Data:** [dd/mm/aaaa — preencher na reunião]
-**Presentes:** [nome (RA) — nome (RA)]
+**Data:** 25/09/2026
+**Presentes:** Artur Feiteiro Ruiz (RA 2840482421032), Tobias Gomide Fonsatti (RA 2840482421046)
 
 ## 1. Ações da retrospectiva anterior — foram aplicadas?
 
@@ -14,22 +9,21 @@ Não se aplica — esta é a primeira sprint do projeto, não há ata anterior.
 
 ## 2. O que funcionou bem
 
-- [ ]
-- [ ]
+- A escolha do Supabase (Auth + PostgreSQL gerenciado) acelerou a configuração inicial do ambiente.
+- Boa comunicação geral e alinhamento sobre as funcionalidades prioritárias da Sprint 1.
+- Conseguimos cobrir todas as 6 histórias Must planejadas para a entrega de fundação.
 
 ## 3. O que não funcionou
 
-- [ ]
-- [ ]
-
-*Fatos objetivos desta sprint que podem ajudar a reflexão (não são opiniões — vocês decidem se foram positivos ou negativos):*
-- *O prazo original da Sprint 1 (18/09) foi estendido pelo professor e unificado com a Sprint 2 (até 25/09)*
-- *Grande parte da implementação de código desta sprint foi feita com assistência intensiva de IA*
-- *Um dos dois integrantes não participou diretamente da sessão de desenvolvimento desta sprint*
+- O prazo estendido e a sobrecarga com prazos e entregas de outras matérias da faculdade apertaram o ritmo.
+- A divisão de tarefas no início não foi tão clara, concentrando partes de configuração e implementação em um dos integrantes.
+- Testes manuais e validações levaram mais tempo do que o estimado inicialmente.
 
 ## 4. Ações para a próxima sprint
 
 | Ação | Responsável |
 |---|---|
-| | |
-| | |
+| Dividir tarefas antes de começar a codar (lista clara de responsáveis) | Tobias e Artur |
+| Artur participar mais ativamente no código e implementação | Artur |
+| Planejar melhor o tempo entre as matérias da faculdade e as entregas do projeto | Ambos |
+
