@@ -16,6 +16,17 @@ export default async function NavBar() {
             <Link href="/projetos" className="hover:underline">
               Projetos
             </Link>
+            <Link href="/sessoes/nova" className="hover:underline">
+              Nova Sessão
+            </Link>
+            <Link href="/historico" className="hover:underline">
+              Meu Histórico
+            </Link>
+            {(usuario.perfil.nome === "GESTOR" || usuario.perfil.nome === "ADMINISTRADOR") && (
+              <Link href="/dashboard" className="hover:underline font-medium">
+                Dashboard
+              </Link>
+            )}
             {usuario.perfil.nome === "ADMINISTRADOR" && (
               <>
                 <Link href="/admin/usuarios" className="hover:underline">
