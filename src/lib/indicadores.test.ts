@@ -4,6 +4,10 @@ import {
   validarNotasAvaliacao,
   calcularSituacaoAtencao,
   consolidarIndicadores,
+  validarDataSessao,
+  lerIdPositivo,
+  lerPeriodo,
+  podeAcompanharSituacao,
 } from "./indicadores";
 
 describe("validarSessao (CT08 e CT09)", () => {
@@ -119,5 +123,77 @@ describe("consolidarIndicadores (História #12 / #13)", () => {
     expect(ind.percentualIa).toBe(50);
     expect(ind.produtividadeMedia).toBe(3);
     expect(ind.ferramentasMaisUsadas[0]?.nome).toBe("ChatGPT");
+  });
+});
+
+describe("validações reforçadas na Sprint 4 (#16)", () => {
+  it("rejeita duração fracionada ou que não é número", () => {
+    expect(validarSessao({ duracaoMinutos: 1.5, usouIa: false })).toContain("duração");
+    expect(validarSessao({ duracaoMinutos: Number.NaN, usouIa: false })).toContain("duração");
+  });
+
+  it("rejeita tipo de atividade maior que a coluna do banco", () => {
+    expect(
+      validarSessao({ duracaoMinutos: 30, usouIa: false, tipoAtividade: "x".repeat(61) })
+    ).toContain("60 caracteres");
+  });
+
+  it("rejeita nota que não é número inteiro", () => {
+    const base = { dificuldade: 3, confianca: 3 };
+    expect(validarNotasAvaliacao({ ...base, produtividade: Number.NaN })).toContain("produtividade");
+    expect(validarNotasAvaliacao({ ...base, produtividade: 2.5 })).toContain("produtividade");
+  });
+
+  it("aceita data passada e rejeita data inválida, vazia ou futura", () => {
+    const hoje = new Date("2026-11-05T12:00:00.000Z");
+    expect(validarDataSessao("2026-11-05", hoje)).toBeNull();
+    expect(validarDataSessao("", hoje)).toContain("válida");
+    expect(validarDataSessao("2026-02-31", hoje)).toContain("válida");
+    expect(validarDataSessao("2026-11-06", hoje)).toContain("futuro");
+  });
+});
+
+describe("lerIdPositivo", () => {
+  it("aceita somente inteiros positivos", () => {
+    expect(lerIdPositivo("12")).toBe(12);
+    expect(lerIdPositivo("abc")).toBeUndefined();
+    expect(lerIdPositivo("-1")).toBeUndefined();
+    expect(lerIdPositivo("1.5")).toBeUndefined();
+    expect(lerIdPositivo(null)).toBeUndefined();
+  });
+});
+
+describe("lerPeriodo (CT15)", () => {
+  it("monta o intervalo com início e fim", () => {
+    const periodo = lerPeriodo("2026-10-01", "2026-10-31");
+    expect(periodo.where?.gte?.toISOString()).toBe("2026-10-01T00:00:00.000Z");
+    expect(periodo.where?.lte?.toISOString()).toBe("2026-10-31T00:00:00.000Z");
+    expect(periodo.erro).toBeUndefined();
+  });
+
+  it("aceita período aberto em uma das pontas", () => {
+    expect(lerPeriodo("2026-10-01").where).toEqual({ gte: new Date("2026-10-01T00:00:00.000Z") });
+    expect(lerPeriodo(undefined, "2026-10-31").where).toEqual({
+      lte: new Date("2026-10-31T00:00:00.000Z"),
+    });
+  });
+
+  it("não filtra quando as datas são inválidas ou ausentes", () => {
+    expect(lerPeriodo("ontem", "2026-13-40")).toEqual({});
+    expect(lerPeriodo()).toEqual({});
+  });
+
+  it("devolve erro quando o início é depois do fim", () => {
+    const periodo = lerPeriodo("2026-10-31", "2026-10-01");
+    expect(periodo.erro).toContain("posterior");
+    expect(periodo.where).toBeUndefined();
+  });
+});
+
+describe("podeAcompanharSituacao (CT16)", () => {
+  it("libera somente gestor e administrador", () => {
+    expect(podeAcompanharSituacao("GESTOR")).toBe(true);
+    expect(podeAcompanharSituacao("ADMINISTRADOR")).toBe(true);
+    expect(podeAcompanharSituacao("DESENVOLVEDOR")).toBe(false);
   });
 });

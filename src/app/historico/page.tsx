@@ -2,10 +2,10 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { getUsuarioAtual } from "@/lib/usuario-atual";
-import { consolidarIndicadores } from "@/lib/indicadores";
+import { consolidarIndicadores, lerIdPositivo, lerPeriodo } from "@/lib/indicadores";
 
 interface Props {
-  searchParams: Promise<{ projetoId?: string }>;
+  searchParams: Promise<{ projetoId?: string; inicio?: string; fim?: string }>;
 }
 
 export default async function HistoricoPage({ searchParams }: Props) {
@@ -13,7 +13,17 @@ export default async function HistoricoPage({ searchParams }: Props) {
   if (!usuario) redirect("/login");
 
   const params = await searchParams;
-  const filtroProjetoId = params.projetoId ? Number(params.projetoId) : undefined;
+  const filtroProjetoId = lerIdPositivo(params.projetoId);
+  const periodo = lerPeriodo(params.inicio, params.fim);
+
+  const linkFiltro = (projetoId?: number) => {
+    const query = new URLSearchParams();
+    if (projetoId) query.set("projetoId", String(projetoId));
+    if (periodo.inicio) query.set("inicio", periodo.inicio);
+    if (periodo.fim) query.set("fim", periodo.fim);
+    const texto = query.toString();
+    return texto ? `/historico?${texto}` : "/historico";
+  };
 
   // Projetos do usuário para o filtro
   const projetos = await prisma.projeto.findMany({
@@ -38,6 +48,7 @@ export default async function HistoricoPage({ searchParams }: Props) {
     where: {
       idUsuario: usuario.idUsuario,
       ...(filtroProjetoId ? { idProjeto: filtroProjetoId } : {}),
+      ...(periodo.where ? { dataSessao: periodo.where } : {}),
     },
     include: {
       projeto: true,
@@ -78,7 +89,7 @@ export default async function HistoricoPage({ searchParams }: Props) {
               <div key={sit.idSituacao} className="text-sm text-amber-800">
                 <p>• {sit.motivo}</p>
                 <span className="text-xs text-amber-600">
-                  Identificado em {new Date(sit.dataIdentificacao).toLocaleDateString("pt-BR")}
+                  Identificado em {new Date(sit.dataIdentificacao).toLocaleDateString("pt-BR", { timeZone: "UTC" })}
                 </span>
               </div>
             ))}
@@ -122,7 +133,7 @@ export default async function HistoricoPage({ searchParams }: Props) {
         <span className="text-sm font-medium">Filtrar por Projeto:</span>
         <div className="flex gap-2 flex-wrap">
           <Link
-            href="/historico"
+            href={linkFiltro()}
             className={`rounded px-3 py-1 text-xs font-medium border ${
               !filtroProjetoId
                 ? "bg-black text-white border-black"
@@ -134,7 +145,7 @@ export default async function HistoricoPage({ searchParams }: Props) {
           {projetos.map((p) => (
             <Link
               key={p.idProjeto}
-              href={`/historico?projetoId=${p.idProjeto}`}
+              href={linkFiltro(p.idProjeto)}
               className={`rounded px-3 py-1 text-xs font-medium border ${
                 filtroProjetoId === p.idProjeto
                   ? "bg-black text-white border-black"
@@ -145,6 +156,39 @@ export default async function HistoricoPage({ searchParams }: Props) {
             </Link>
           ))}
         </div>
+      </section>
+
+      {/* Filtro por Período */}
+      <section className="flex flex-wrap items-center gap-3">
+        <form method="GET" action="/historico" className="flex flex-wrap items-center gap-3">
+          {filtroProjetoId && <input type="hidden" name="projetoId" value={filtroProjetoId} />}
+          <span className="text-sm font-medium">Filtrar por Período:</span>
+          <label className="flex items-center gap-1 text-xs text-gray-600">
+            De
+            <input
+              type="date"
+              name="inicio"
+              defaultValue={params.inicio ?? ""}
+              className="rounded border p-1.5 text-xs bg-white"
+            />
+          </label>
+          <label className="flex items-center gap-1 text-xs text-gray-600">
+            Até
+            <input
+              type="date"
+              name="fim"
+              defaultValue={params.fim ?? ""}
+              className="rounded border p-1.5 text-xs bg-white"
+            />
+          </label>
+          <button
+            type="submit"
+            className="rounded bg-gray-900 text-white px-3 py-1.5 text-xs font-medium hover:bg-black"
+          >
+            Aplicar
+          </button>
+        </form>
+        {periodo.erro && <p className="w-full text-xs text-red-700">{periodo.erro}</p>}
       </section>
 
       {/* Tabela de Histórico */}
@@ -172,7 +216,7 @@ export default async function HistoricoPage({ searchParams }: Props) {
               sessoes.map((s) => (
                 <tr key={s.idSessao} className="hover:bg-gray-50">
                   <td className="py-3 px-4 font-mono text-xs">
-                    {new Date(s.dataSessao).toLocaleDateString("pt-BR")}
+                    {new Date(s.dataSessao).toLocaleDateString("pt-BR", { timeZone: "UTC" })}
                   </td>
                   <td className="py-3 px-4">
                     <p className="font-medium">{s.projeto.nome}</p>

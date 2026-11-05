@@ -26,6 +26,9 @@ jobs:
       - name: Gerar Prisma Client
         run: npx prisma generate
 
+      - name: Executar lint (ESLint)
+        run: npm run lint
+
       - name: Executar testes automatizados (Vitest)
         run: npm test
 

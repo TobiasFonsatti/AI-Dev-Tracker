@@ -45,6 +45,16 @@ export default async function CadastroPage({
             className="rounded border px-3 py-2"
           />
         </label>
+        <label className="flex items-start gap-2 text-sm text-gray-700">
+          <input type="checkbox" name="aceitePrivacidade" required className="mt-1" />
+          <span>
+            Li e aceito o{" "}
+            <Link href="/privacidade" className="underline">
+              aviso de privacidade
+            </Link>
+            .
+          </span>
+        </label>
         <button
           type="submit"
           className="rounded bg-black px-3 py-2 text-white hover:bg-gray-800"

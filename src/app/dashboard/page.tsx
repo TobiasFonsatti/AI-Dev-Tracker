@@ -2,13 +2,20 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { getUsuarioAtual } from "@/lib/usuario-atual";
-import { consolidarIndicadores } from "@/lib/indicadores";
+import {
+  consolidarIndicadores,
+  lerIdPositivo,
+  lerPeriodo,
+  podeAcompanharSituacao,
+} from "@/lib/indicadores";
 import { marcarSituacaoAcompanhada } from "@/lib/actions/sessoes";
 
 interface Props {
   searchParams: Promise<{
     projetoId?: string;
     desenvolvedorId?: string;
+    inicio?: string;
+    fim?: string;
   }>;
 }
 
@@ -16,29 +23,31 @@ export default async function DashboardPage({ searchParams }: Props) {
   const usuario = await getUsuarioAtual();
   if (!usuario) redirect("/login");
 
-  if (usuario.perfil.nome !== "GESTOR" && usuario.perfil.nome !== "ADMINISTRADOR") {
-    redirect("/historico");
-  }
+  if (!podeAcompanharSituacao(usuario.perfil.nome)) redirect("/historico");
 
   const params = await searchParams;
-  const filtroProjetoId = params.projetoId ? Number(params.projetoId) : undefined;
-  const filtroDevId = params.desenvolvedorId ? Number(params.desenvolvedorId) : undefined;
+  const filtroProjetoId = lerIdPositivo(params.projetoId);
+  const filtroDevId = lerIdPositivo(params.desenvolvedorId);
+  const periodo = lerPeriodo(params.inicio, params.fim);
+
+  const filtroSessao = {
+    ...(filtroProjetoId ? { idProjeto: filtroProjetoId } : {}),
+    ...(filtroDevId ? { idUsuario: filtroDevId } : {}),
+    ...(periodo.where ? { dataSessao: periodo.where } : {}),
+  };
 
   const [projetos, desenvolvedores, situacoes] = await Promise.all([
     prisma.projeto.findMany({ select: { idProjeto: true, nome: true }, orderBy: { nome: "asc" } }),
     prisma.usuario.findMany({ select: { idUsuario: true, nome: true }, orderBy: { nome: "asc" } }),
     prisma.situacaoAtencao.findMany({
-      where: { acompanhada: false },
+      where: { acompanhada: false, sessao: filtroSessao },
       include: { usuario: true, sessao: { include: { projeto: true } } },
       orderBy: { dataIdentificacao: "desc" },
     }),
   ]);
 
   const sessoes = await prisma.sessaoDesenvolvimento.findMany({
-    where: {
-      ...(filtroProjetoId ? { idProjeto: filtroProjetoId } : {}),
-      ...(filtroDevId ? { idUsuario: filtroDevId } : {}),
-    },
+    where: filtroSessao,
     include: {
       usuario: true,
       projeto: true,
@@ -95,7 +104,7 @@ export default async function DashboardPage({ searchParams }: Props) {
                   </p>
                   <p className="text-sm text-red-700 mt-1">{sit.motivo}</p>
                   <p className="text-xs text-gray-400 mt-1">
-                    Detectado em {new Date(sit.dataIdentificacao).toLocaleDateString("pt-BR")}
+                    Detectado em {new Date(sit.dataIdentificacao).toLocaleDateString("pt-BR", { timeZone: "UTC" })}
                   </p>
                 </div>
                 <form action={marcarSituacaoAcompanhada} className="flex items-center gap-2">
@@ -148,6 +157,26 @@ export default async function DashboardPage({ searchParams }: Props) {
             ))}
           </select>
 
+          <label className="flex items-center gap-1 text-xs text-gray-600">
+            De
+            <input
+              type="date"
+              name="inicio"
+              defaultValue={params.inicio ?? ""}
+              className="rounded border p-1.5 text-xs bg-white"
+            />
+          </label>
+
+          <label className="flex items-center gap-1 text-xs text-gray-600">
+            Até
+            <input
+              type="date"
+              name="fim"
+              defaultValue={params.fim ?? ""}
+              className="rounded border p-1.5 text-xs bg-white"
+            />
+          </label>
+
           <button
             type="submit"
             className="rounded bg-gray-900 text-white px-3 py-1.5 text-xs font-medium hover:bg-black"
@@ -155,12 +184,13 @@ export default async function DashboardPage({ searchParams }: Props) {
             Aplicar Filtros
           </button>
 
-          {(filtroProjetoId || filtroDevId) && (
+          {(filtroProjetoId || filtroDevId || params.inicio || params.fim) && (
             <Link href="/dashboard" className="text-xs underline text-gray-600">
               Limpar
             </Link>
           )}
         </form>
+        {periodo.erro && <p className="w-full text-xs text-red-700">{periodo.erro}</p>}
       </section>
 
       <section className="grid grid-cols-2 md:grid-cols-4 gap-4">

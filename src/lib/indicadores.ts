@@ -14,8 +14,11 @@ export function validarSessao(dados: {
   idFerramenta?: number | null;
   tipoAtividade?: string | null;
 }): string | null {
-  if (!Number.isFinite(dados.duracaoMinutos) || dados.duracaoMinutos <= 0) {
+  if (!Number.isInteger(dados.duracaoMinutos) || dados.duracaoMinutos <= 0) {
     return "A duração deve ser um número inteiro positivo de minutos.";
+  }
+  if (dados.tipoAtividade && dados.tipoAtividade.length > 60) {
+    return "O tipo de atividade deve ter no máximo 60 caracteres.";
   }
   if (dados.usouIa) {
     if (!dados.idFerramenta) {
@@ -38,11 +41,65 @@ export function validarNotasAvaliacao(notas: {
 }): string | null {
   const campos = Object.entries(notas);
   for (const [campo, valor] of campos) {
-    if (valor !== undefined && (valor < 1 || valor > 5)) {
+    if (valor !== undefined && (!Number.isInteger(valor) || valor < 1 || valor > 5)) {
       return `O valor de ${campo} deve estar entre 1 e 5.`;
     }
   }
   return null;
+}
+
+const DATA_ISO = /^\d{4}-\d{2}-\d{2}$/;
+
+function dataIsoParaUtc(valor: string): Date | null {
+  if (!DATA_ISO.test(valor)) return null;
+  const data = new Date(`${valor}T00:00:00.000Z`);
+  if (Number.isNaN(data.getTime())) return null;
+  // Rejeita datas que o JS "corrige" sozinho, como 2026-02-31.
+  return data.toISOString().startsWith(valor) ? data : null;
+}
+
+export function validarDataSessao(valor: string, hoje: Date = new Date()): string | null {
+  const data = dataIsoParaUtc(valor);
+  if (!data) return "Informe uma data válida para a sessão.";
+  if (data.getTime() > hoje.getTime()) return "A data da sessão não pode estar no futuro.";
+  return null;
+}
+
+// Parâmetros de URL chegam como texto livre: qualquer coisa que não seja um id
+// positivo é tratada como "sem filtro", em vez de virar erro na consulta.
+export function lerIdPositivo(valor: unknown): number | undefined {
+  const id = Number(valor);
+  return Number.isInteger(id) && id > 0 ? id : undefined;
+}
+
+export interface PeriodoFiltro {
+  inicio?: string;
+  fim?: string;
+  where?: { gte?: Date; lte?: Date };
+  erro?: string;
+}
+
+export function lerPeriodo(inicio?: string, fim?: string): PeriodoFiltro {
+  const dataInicio = inicio ? dataIsoParaUtc(inicio) : null;
+  const dataFim = fim ? dataIsoParaUtc(fim) : null;
+
+  if (dataInicio && dataFim && dataInicio.getTime() > dataFim.getTime()) {
+    return { inicio, fim, erro: "A data inicial não pode ser posterior à data final." };
+  }
+  if (!dataInicio && !dataFim) return {};
+
+  return {
+    inicio: dataInicio ? inicio : undefined,
+    fim: dataFim ? fim : undefined,
+    where: {
+      ...(dataInicio ? { gte: dataInicio } : {}),
+      ...(dataFim ? { lte: dataFim } : {}),
+    },
+  };
+}
+
+export function podeAcompanharSituacao(perfil: string): boolean {
+  return perfil === "GESTOR" || perfil === "ADMINISTRADOR";
 }
 
 export function calcularSituacaoAtencao(ultimasSessoesComIa: SessaoParaAvaliacao[]): {

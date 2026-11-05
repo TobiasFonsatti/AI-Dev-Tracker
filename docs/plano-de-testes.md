@@ -27,7 +27,7 @@ tiver ao menos um teste de integração cobrindo o caminho de sucesso e um camin
 | CT03 | #2 | Cadastro de projeto com nome vazio | nome = "" | Sistema recusa o cadastro | Alta |
 | CT04 | #3 | Cadastro de tarefa sem projeto vinculado | tarefa sem `id_projeto` | Sistema recusa — projeto é obrigatório | Alta |
 | CT05 | #4 | Desativação de usuário | admin desativa uma conta | Usuário desativado não consegue mais fazer login | Alta |
-| CT06 | #5 | Desenvolvedor tenta acessar dashboard agregado | requisição de um usuário com perfil Desenvolvedor | Acesso bloqueado com mensagem clara (403) | Alta |
+| CT06 | #5 | Desenvolvedor tenta acessar dashboard agregado | requisição de um usuário com perfil Desenvolvedor | Acesso bloqueado com redirecionamento para `/historico` | Alta |
 | CT07 | #6 | Ferramenta de IA desativada | `ativa = false` | Ferramenta não aparece mais como opção ao registrar nova sessão | Média |
 | CT08 | #7 | Sessão com `usou_ia = true` e sem ferramenta informada | ferramenta ausente | Sistema recusa — ferramenta e tipo de atividade tornam-se obrigatórios | Alta |
 | CT09 | #7 | Sessão com duração negativa ou zero | `duracao_minutos = 0` | Sistema recusa (validação de interface + constraint `CHECK` no banco) | Alta |
@@ -39,6 +39,15 @@ tiver ao menos um teste de integração cobrindo o caminho de sucesso e um camin
 | CT15 | #13 | Filtro combinado projeto + período no dashboard | filtro aplicado | Todos os indicadores da tela são recalculados conforme o filtro | Média |
 | CT16 | #14 | Gestor marca situação de atenção como acompanhada | ação de "marcar acompanhada" | Campo `acompanhada` muda para `true` e reflete na listagem | Média |
 | CT17 | #16 | Envio de formulário com campo obrigatório vazio | campo obrigatório não preenchido | Erro de validação específico do campo, tanto na interface quanto rejeitado pelo banco (`NOT NULL`) | Alta |
+| CT18 | #14 | Desenvolvedor tenta marcar situação como acompanhada | envio da ação por um usuário com perfil Desenvolvedor | Ação recusada e redirecionamento para `/historico` | Alta |
+| CT19 | #7 | Sessão em projeto do qual o usuário não participa | `idProjeto` de outro projeto | Sistema recusa com mensagem de erro | Alta |
+| CT20 | #7 | Sessão com tarefa de outro projeto | `idTarefa` que não pertence ao projeto | Sistema recusa com mensagem de erro | Alta |
+| CT21 | #10 | Nova sessão com situação de atenção já aberta | critério ativo e situação não acompanhada | Nenhuma situação duplicada é criada | Média |
+| CT22 | #11 | Filtro por período no histórico | data inicial e final | Lista e indicadores mostram só o período escolhido | Média |
+| CT23 | #13 | Período com início depois do fim | início > fim | Mensagem de erro, sem aplicar o período | Baixa |
+| CT24 | #16 | Valores inválidos direto no banco | `duracao_minutos = 0`, nota 7, status inexistente | Banco recusa pelas constraints `CHECK` | Alta |
+| CT25 | #1 | Cadastro sem aceitar o aviso de privacidade | caixa de aceite desmarcada | Sistema recusa o cadastro | Média |
+| CT26 | #17 | Headers de segurança | requisição a qualquer página | Resposta traz `X-Frame-Options`, `nosniff`, HSTS e CSP, sem `X-Powered-By` | Média |
 
 *(A partir da E5, cada linha nova aqui precisa de uma evidência de execução correspondente —
 ver `docs/sprints/sprint-N-evidencias-teste.md`.)*
