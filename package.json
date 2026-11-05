@@ -10,7 +10,7 @@
     "postinstall": "prisma generate",
     "db:push": "prisma db push",
     "db:seed": "tsx prisma/seed.ts",
-    "test": "vitest run"
+    "test": "node --experimental-strip-types scripts/test-runner.mjs"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.10.0",

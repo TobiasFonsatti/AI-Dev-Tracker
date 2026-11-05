@@ -27,3 +27,34 @@ export function validarDuracaoSessaoMinutos(duracaoMinutos: number): string | nu
   }
   return null;
 }
+
+export function validarEscalaAvaliacao(nota: number, campo: string): string | null {
+  if (!Number.isInteger(nota) || nota < 1 || nota > 5) {
+    return `O campo ${campo} deve ser uma nota inteira entre 1 e 5.`;
+  }
+  return null;
+}
+
+export interface ValidarSessaoInput {
+  duracaoMinutos: number;
+  usouIa: boolean;
+  tipoAtividade?: string | null;
+  idFerramenta?: number | null;
+}
+
+export function validarSessao(dados: ValidarSessaoInput): string | null {
+  const erroDuracao = validarDuracaoSessaoMinutos(dados.duracaoMinutos);
+  if (erroDuracao) return erroDuracao;
+
+  if (!dados.tipoAtividade || !dados.tipoAtividade.trim()) {
+    return "O tipo de atividade é obrigatório.";
+  }
+
+  if (dados.usouIa) {
+    if (!dados.idFerramenta || dados.idFerramenta <= 0) {
+      return "Selecione uma ferramenta de IA ao indicar uso de IA.";
+    }
+  }
+
+  return null;
+}

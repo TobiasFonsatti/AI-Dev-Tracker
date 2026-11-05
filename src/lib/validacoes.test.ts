@@ -4,6 +4,8 @@ import {
   validarTituloTarefa,
   validarCadastro,
   validarDuracaoSessaoMinutos,
+  validarEscalaAvaliacao,
+  validarSessao,
 } from "./validacoes";
 
 // CT03 (docs/plano-de-testes.md) — cadastro de projeto com nome vazio
@@ -47,8 +49,7 @@ describe("validarCadastro", () => {
   });
 });
 
-// CT09 — sessão com duração negativa ou zero (validação pronta;
-// tela de registro de sessão ainda não existe — feature da Sprint 2, história #7)
+// CT09 — sessão com duração negativa ou zero
 describe("validarDuracaoSessaoMinutos", () => {
   it("rejeita duração zero", () => {
     expect(validarDuracaoSessaoMinutos(0)).not.toBeNull();
@@ -60,5 +61,68 @@ describe("validarDuracaoSessaoMinutos", () => {
 
   it("aceita duração positiva", () => {
     expect(validarDuracaoSessaoMinutos(60)).toBeNull();
+  });
+});
+
+// CT10 — nota fora da escala de 1 a 5
+describe("validarEscalaAvaliacao", () => {
+  it("rejeita nota menor que 1", () => {
+    expect(validarEscalaAvaliacao(0, "produtividade")).not.toBeNull();
+    expect(validarEscalaAvaliacao(-1, "confiança")).not.toBeNull();
+  });
+
+  it("rejeita nota maior que 5", () => {
+    expect(validarEscalaAvaliacao(6, "dificuldade")).not.toBeNull();
+  });
+
+  it("rejeita número decimal", () => {
+    expect(validarEscalaAvaliacao(3.5, "fluidez")).not.toBeNull();
+  });
+
+  it("aceita notas válidas entre 1 e 5", () => {
+    expect(validarEscalaAvaliacao(1, "produtividade")).toBeNull();
+    expect(validarEscalaAvaliacao(3, "produtividade")).toBeNull();
+    expect(validarEscalaAvaliacao(5, "produtividade")).toBeNull();
+  });
+});
+
+// CT08 & CT11 — validação de sessão de desenvolvimento e uso de IA
+describe("validarSessao", () => {
+  it("CT08: rejeita sessão com usouIa = true sem ferramenta informada", () => {
+    const erro = validarSessao({
+      duracaoMinutos: 60,
+      usouIa: true,
+      tipoAtividade: "Desenvolvimento de feature",
+      idFerramenta: null,
+    });
+    expect(erro).toContain("Selecione uma ferramenta de IA");
+  });
+
+  it("rejeita sessão com tipo de atividade em branco", () => {
+    const erro = validarSessao({
+      duracaoMinutos: 45,
+      usouIa: false,
+      tipoAtividade: "   ",
+    });
+    expect(erro).toContain("tipo de atividade é obrigatório");
+  });
+
+  it("aceita sessão sem IA com duração e tipo de atividade válidos", () => {
+    const erro = validarSessao({
+      duracaoMinutos: 90,
+      usouIa: false,
+      tipoAtividade: "Refatoração de código",
+    });
+    expect(erro).toBeNull();
+  });
+
+  it("aceita sessão com IA completa e ferramenta vinculada", () => {
+    const erro = validarSessao({
+      duracaoMinutos: 45,
+      usouIa: true,
+      tipoAtividade: "Correção de bug",
+      idFerramenta: 1,
+    });
+    expect(erro).toBeNull();
   });
 });
