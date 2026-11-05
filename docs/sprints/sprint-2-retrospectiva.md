@@ -1,7 +1,7 @@
-﻿# Retrospectiva — Sprint 2
+# Retrospectiva — Sprint 2
 
 **Data:** 02/10/2026
-**Presentes:** Tobias Fonsatti, Artur Ruiz
+**Presentes:** Artur Feiteiro Ruiz (RA 2840482421032), Tobias Gomide Fonsatti (RA 2840482421046)
 
 ## 1. Ações da sprint anterior
 

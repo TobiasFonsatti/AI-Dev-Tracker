@@ -20,9 +20,9 @@ alta dificuldade associadas ao uso frequente de IA).
 | Ambiente | Status |
 |---|---|
 | **Local (desenvolvimento)** | ✅ Funcional — `npm run dev` na porta 3000 |
-| **Produção** | 🔜 Previsto para deploy em servidor próprio (Oracle Cloud, via Cloudflare Tunnel) mais adiante no semestre |
+| **Produção** | 🔜 Imagem Docker pronta; publicação em servidor próprio com domínio próprio pendente (ver [Deploy](#deploy)) |
 
-> Atualmente, a aplicação roda apenas em ambiente local. As instruções para
+> A URL pública entra aqui assim que o deploy for feito. As instruções para
 > reproduzir o ambiente estão detalhadas na seção **Como rodar localmente**.
 
 ## Stack Tecnológica
@@ -78,10 +78,24 @@ alta dificuldade associadas ao uso frequente de IA).
 
    > `db/schema.sql` permanece no repositório como DDL de referência/documentação.
 
-5. **(Opcional) Popule o banco com dados iniciais:**
+   O Prisma não cria constraints `CHECK`, então aplique-as em seguida:
+   ```bash
+   npm run db:constraints
+   ```
+
+5. **Popule o banco com os dados de referência (perfis, permissões e ferramentas):**
    ```bash
    npm run db:seed
    ```
+   O cadastro de usuários depende deste passo.
+
+   Para abrir o dashboard já preenchido, crie também os dados de demonstração.
+   Defina `SEED_DEMO_SENHA` no `.env` e rode:
+   ```bash
+   npm run db:seed:demo
+   ```
+   As contas criadas são `demo.admin`, `demo.gestor`, `demo.ana` e `demo.bruno`,
+   todas em `@aidevtracker.test`, com a senha definida acima.
 
 6. **Inicie o servidor de desenvolvimento:**
    ```bash
@@ -102,6 +116,27 @@ alta dificuldade associadas ao uso frequente de IA).
 | `test` | `npm run test` | Executa os testes com Vitest |
 | `db:push` | `npm run db:push` | Sincroniza o schema Prisma com o banco |
 | `db:seed` | `npm run db:seed` | Popula o banco com dados iniciais |
+| `db:seed:demo` | `npm run db:seed:demo` | Cria contas e sessões de demonstração (exige `SEED_DEMO_SENHA`) |
+| `db:constraints` | `npm run db:constraints` | Aplica as constraints `CHECK` de `db/constraints.sql` |
+
+## Deploy
+
+A aplicação roda em Docker. No servidor, com Docker e Docker Compose instalados:
+
+1. Clone o repositório e crie o `.env` a partir do `.env.example`.
+2. Prepare o banco uma vez, de uma máquina com Node.js: `npm run db:push`,
+   `npm run db:constraints` e `npm run db:seed`.
+3. Suba a aplicação:
+   ```bash
+   docker compose up -d --build
+   ```
+4. Aponte o domínio para `127.0.0.1:3000`, usando proxy reverso ou túnel com HTTPS.
+   A porta não fica exposta para fora do servidor.
+5. No Supabase, em **Authentication → URL Configuration**, cadastre a URL pública
+   como *Site URL*.
+
+Depois de mudar `NEXT_PUBLIC_SUPABASE_URL` ou `NEXT_PUBLIC_SUPABASE_ANON_KEY`, refaça o
+build com `--build`, porque esses valores são embutidos na imagem.
 
 ## Variáveis de Ambiente
 
@@ -172,6 +207,8 @@ Ver estratégia completa em [`docs/plano-de-testes.md`](docs/plano-de-testes.md)
 | E2 | [`docs/backlog.md`](docs/backlog.md), [`docs/termo-de-aceite-projeto.md`](docs/termo-de-aceite-projeto.md) |
 | E3 | [`docs/uml.md`](docs/uml.md), [`docs/der.md`](docs/der.md), [`db/schema.sql`](db/schema.sql) |
 | E4 | Este README, [`docs/plano-de-testes.md`](docs/plano-de-testes.md), [`docs/prototipo.md`](docs/prototipo.md) |
+| E5–E8 | Relatórios de sprint em [`docs/sprints/`](docs/sprints/) |
+| E9 | [`docs/relatorio-testes-final.md`](docs/relatorio-testes-final.md), [`docs/termo-de-aceite-cliente.md`](docs/termo-de-aceite-cliente.md) |
 
 ## Licença / Uso acadêmico
 

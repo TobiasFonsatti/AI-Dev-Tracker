@@ -4,8 +4,12 @@ import {
   validarTituloTarefa,
   validarCadastro,
   validarDuracaoSessaoMinutos,
+<<<<<<< HEAD
   validarEscalaAvaliacao,
   validarSessao,
+=======
+  validarAceitePrivacidade,
+>>>>>>> 32aa3998cf216287cd92033ae9e4a91c0e83323c
 } from "./validacoes";
 
 // CT03 (docs/plano-de-testes.md) — cadastro de projeto com nome vazio
@@ -64,6 +68,7 @@ describe("validarDuracaoSessaoMinutos", () => {
   });
 });
 
+<<<<<<< HEAD
 // CT10 — nota fora da escala de 1 a 5
 describe("validarEscalaAvaliacao", () => {
   it("rejeita nota menor que 1", () => {
@@ -124,5 +129,11 @@ describe("validarSessao", () => {
       idFerramenta: 1,
     });
     expect(erro).toBeNull();
+=======
+describe("validarAceitePrivacidade", () => {
+  it("exige o aceite marcado", () => {
+    expect(validarAceitePrivacidade("on")).toBeNull();
+    expect(validarAceitePrivacidade(null)).toContain("privacidade");
+>>>>>>> 32aa3998cf216287cd92033ae9e4a91c0e83323c
   });
 });

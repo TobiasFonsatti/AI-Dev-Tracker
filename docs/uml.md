@@ -27,47 +27,60 @@ flowchart LR
   Adm --> UC13[Definir permissões por perfil]
   Adm --> UC14[Gerenciar ferramentas de IA]
 
-  UC4 -.-> UC15[Validar dados]
-  UC5 -.-> UC15
-  UC12 -.-> UC15
-  UC14 -.-> UC15
-  UC4 -.include.-> UC7
+  UC4 -. &lt;&lt;extend&gt;&gt; .-> UC7
+  UC5 -. &lt;&lt;extend&gt;&gt; .-> UC4
 ```
 
 ## 2. Diagrama de Classes
 
 ```mermaid
 classDiagram
-  class Usuario {
+  class Perfil {
     +id: int
     +nome: string
+    +descricao: string
+  }
+  class Permissao {
+    +id: int
+    +codigo: string
+    +descricao: string
+  }
+  class Usuario {
+    +id: int
+    +authUserId: string
+    +nome: string
     +email: string
-    +senhaHash: string
-    +perfil: enum
     +status: enum
+    +dataCadastro: date
   }
   class Projeto {
     +id: int
     +nome: string
     +descricao: string
     +dataCriacao: date
+    +status: enum
   }
   class Tarefa {
     +id: int
     +titulo: string
     +descricao: string
     +status: enum
+    +prioridade: enum
+    +prazo: date
   }
   class SessaoDesenvolvimento {
     +id: int
-    +data: date
-    +duracao: int
+    +dataSessao: date
+    +duracaoMinutos: int
     +usouIA: bool
     +tipoAtividade: string
+    +observacoes: string
   }
   class FerramentaIA {
     +id: int
     +nome: string
+    +fornecedor: string
+    +versao: string
     +ativa: bool
   }
   class AvaliacaoSessao {
@@ -85,29 +98,26 @@ classDiagram
     +motivo: string
     +dataIdentificacao: date
     +acompanhada: bool
-  }
-  class Dashboard {
-    +periodoInicio: date
-    +periodoFim: date
+    +observacoes: string
   }
 
+  Perfil "1" -- "N" Usuario : define
+  Perfil "N" -- "N" Permissao : possui
   Usuario "N" -- "N" Projeto : participa
   Projeto "1" -- "N" Tarefa : possui
   Usuario "N" -- "N" Tarefa : associado
   Usuario "1" -- "N" SessaoDesenvolvimento : registra
   Projeto "1" -- "N" SessaoDesenvolvimento : contexto
-  Tarefa "1" -- "N" SessaoDesenvolvimento : relacionada
-  FerramentaIA "1" -- "N" SessaoDesenvolvimento : utilizada
+  Tarefa "0..1" -- "N" SessaoDesenvolvimento : relacionada
+  FerramentaIA "N" -- "N" SessaoDesenvolvimento : utilizada
   SessaoDesenvolvimento "1" -- "0..1" AvaliacaoSessao : recebe
   SessaoDesenvolvimento "1" -- "N" SituacaoAtencao : pode gerar
-  Usuario "1" -- "N" SituacaoAtencao : possui
-  Dashboard "1" -- "N" Usuario : consolida
-  Dashboard "1" -- "N" Projeto : filtra
+  Usuario "1" -- "N" SituacaoAtencao : responsavel
 ```
 
-## 3. Rastreabilidade — caso de uso → história do backlog
+## 3. Rastreabilidade — Caso de Uso → História do Backlog
 
-| Caso de uso | História(s) relacionada(s) (E2) |
+| Caso de Uso | História(s) Relacionada(s) (E2) |
 |---|---|
 | Cadastrar-se e fazer login | #1 |
 | Cadastrar projetos | #2 |
@@ -123,6 +133,8 @@ classDiagram
 | Filtrar indicadores do dashboard | #13 |
 | Acompanhar situações de atenção | #14 |
 | Visualizar evolução dos indicadores | #15 |
-| Validar dados | #16 |
-| Aplicação pública por URL | #17 |
-| README completo no repositório | #18 |
+
+> **Nota sobre requisitos não funcionais e técnicos do Backlog:**
+> - História **#16** (Validação de dados): Trata-se de regra de integridade/validação inerente às operações do sistema, não de um caso de uso isolado.
+> - História **#17** (Aplicação pública por URL): Requisito não funcional de infraestrutura/deploy.
+> - História **#18** (README completo): Requisito técnico e de documentação do repositório.

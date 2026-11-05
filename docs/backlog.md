@@ -48,3 +48,24 @@ Legenda — **Prioridade (MoSCoW):** Must = obrigatório para o MVP · Should = 
 | 9 | Avaliação de foco, fluidez e qualidade do feedback (Should) | ✅ Concluída | Exibição condicional no formulário quando `usou_ia = true` |
 | 10 | Identificação automática de situações de atenção | ✅ Concluída | Critério: últimas 5 sessões com IA; confiança média < 2,5 OU dificuldade média > 3,5 |
 | 11–15 | Dashboard, histórico, filtros, evolução | ⏳ Planejada | Sprint 3 |
+
+## Atualização de status — Sprint 3 (E7)
+
+| # | História | Status | Observação |
+|---|---|---|---|
+| 11 | Visualizar meu próprio histórico e indicadores | ✅ Concluída | `/historico` com filtros por projeto e resumo pessoal de métricas |
+| 12 | Dashboard com indicadores agregados de equipe | ✅ Concluída | `/dashboard` com métricas consolidadas, ranking de IA e restrição por perfil |
+| 13 | Filtros no dashboard da equipe | ✅ Concluída | Filtros combinados por projeto e desenvolvedor |
+| 14 | Acompanhar situações de atenção | ✅ Concluída | Painel no dashboard com anotação e botão "Marcar Acompanhada" |
+| 15 | Visualizar evolução dos indicadores por data | ✅ Concluída | Exibição de taxa de adesão a IA ao longo do tempo no dashboard |
+| 16–18 | Validações completas, deploy público e README | ⏳ Planejada | Sprint 4 |
+
+## Atualização de status — Sprint 4 (E8)
+
+| # | História | Status | Observação |
+|---|---|---|---|
+| 11 | Histórico filtrável por período | ✅ Concluída | Filtro por período adicionado, faltava para o critério de aceite |
+| 13 | Filtros do dashboard por período | ✅ Concluída | Filtro por período adicionado; o painel de alertas também passou a respeitar os filtros |
+| 16 | Validações em tela e banco | 🟡 Em validação | Regras reforçadas e `db/constraints.sql` criado; falta aplicar as constraints no banco do Supabase |
+| 17 | Deploy público por URL | 🟡 Em andamento | Imagem Docker e `docker-compose.yml` prontos; falta publicar no servidor próprio |
+| 18 | README completo | 🟡 Em validação | Passos de deploy, constraints e seed adicionados; falta testar em máquina limpa |
