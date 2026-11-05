@@ -27,8 +27,8 @@ Também entraram os ajustes de #11 e #13, porque o filtro por período fazia par
 | Validar projeto, tarefa, ferramenta, data e notas da sessão | Concluído |
 | Impedir situação de atenção duplicada | Concluído |
 | Filtro por período no dashboard e no histórico | Concluído |
-| Script de constraints `CHECK` (`db/constraints.sql`) | Concluído; falta aplicar no Supabase |
+| Script de constraints `CHECK` (`db/constraints.sql`) | Concluído e aplicado no Supabase |
 | Headers de segurança e aviso de privacidade (LGPD) | Concluído |
-| Seed de demonstração | Concluído; falta rodar no Supabase |
+| Seed de demonstração | Concluído e executado no Supabase |
 | Dockerfile e `docker-compose.yml` | Concluído |
 | Publicar no servidor próprio | Pendente |
