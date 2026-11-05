@@ -59,3 +59,13 @@ Legenda — **Prioridade (MoSCoW):** Must = obrigatório para o MVP · Should = 
 | 14 | Acompanhar situações de atenção | ✅ Concluída | Painel no dashboard com anotação e botão "Marcar Acompanhada" |
 | 15 | Visualizar evolução dos indicadores por data | ✅ Concluída | Exibição de taxa de adesão a IA ao longo do tempo no dashboard |
 | 16–18 | Validações completas, deploy público e README | ⏳ Planejada | Sprint 4 |
+
+## Atualização de status — Sprint 4 (E8)
+
+| # | História | Status | Observação |
+|---|---|---|---|
+| 11 | Histórico filtrável por período | ✅ Concluída | Filtro por período adicionado, faltava para o critério de aceite |
+| 13 | Filtros do dashboard por período | ✅ Concluída | Filtro por período adicionado; o painel de alertas também passou a respeitar os filtros |
+| 16 | Validações em tela e banco | 🟡 Em validação | Regras reforçadas e `db/constraints.sql` criado; falta aplicar as constraints no banco do Supabase |
+| 17 | Deploy público por URL | 🟡 Em andamento | Imagem Docker e `docker-compose.yml` prontos; falta publicar no servidor próprio |
+| 18 | README completo | 🟡 Em validação | Passos de deploy, constraints e seed adicionados; falta testar em máquina limpa |
