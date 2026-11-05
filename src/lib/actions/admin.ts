@@ -3,12 +3,14 @@
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { exigirAdmin } from "@/lib/usuario-atual";
+import { STATUS_USUARIO } from "@/lib/validacoes";
 
 export async function alternarStatusUsuario(formData: FormData) {
   await exigirAdmin();
 
   const idUsuario = Number(formData.get("idUsuario"));
   const novoStatus = String(formData.get("novoStatus"));
+  if (!STATUS_USUARIO.includes(novoStatus)) return;
 
   await prisma.usuario.update({
     where: { idUsuario },

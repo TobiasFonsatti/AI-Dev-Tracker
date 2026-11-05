@@ -4,6 +4,7 @@ import {
   validarTituloTarefa,
   validarCadastro,
   validarDuracaoSessaoMinutos,
+  validarAceitePrivacidade,
 } from "./validacoes";
 
 // CT03 (docs/plano-de-testes.md) — cadastro de projeto com nome vazio
@@ -60,5 +61,12 @@ describe("validarDuracaoSessaoMinutos", () => {
 
   it("aceita duração positiva", () => {
     expect(validarDuracaoSessaoMinutos(60)).toBeNull();
+  });
+});
+
+describe("validarAceitePrivacidade", () => {
+  it("exige o aceite marcado", () => {
+    expect(validarAceitePrivacidade("on")).toBeNull();
+    expect(validarAceitePrivacidade(null)).toContain("privacidade");
   });
 });

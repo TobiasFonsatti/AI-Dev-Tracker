@@ -7,21 +7,28 @@ import { getUsuarioAtual } from "@/lib/usuario-atual";
 import {
   validarSessao,
   validarNotasAvaliacao,
+  validarDataSessao,
   calcularSituacaoAtencao,
+  lerIdPositivo,
+  podeAcompanharSituacao,
 } from "@/lib/indicadores";
+
+function voltarComErro(mensagem: string): never {
+  redirect(`/sessoes/nova?erro=${encodeURIComponent(mensagem)}`);
+}
 
 export async function criarSessaoComAvaliacao(formData: FormData) {
   const usuario = await getUsuarioAtual();
   if (!usuario) redirect("/login");
 
-  const idProjeto = Number(formData.get("idProjeto"));
+  const idProjeto = lerIdPositivo(formData.get("idProjeto"));
   const idTarefaRaw = formData.get("idTarefa");
-  const idTarefa = idTarefaRaw ? Number(idTarefaRaw) : null;
+  const idTarefa = idTarefaRaw ? (lerIdPositivo(idTarefaRaw) ?? null) : null;
   const dataSessaoStr = String(formData.get("dataSessao") ?? "");
   const duracaoMinutos = Number(formData.get("duracaoMinutos"));
   const usouIa = formData.get("usouIa") === "true" || formData.get("usouIa") === "on";
   const idFerramentaRaw = formData.get("idFerramenta");
-  const idFerramenta = idFerramentaRaw ? Number(idFerramentaRaw) : null;
+  const idFerramenta = idFerramentaRaw ? (lerIdPositivo(idFerramentaRaw) ?? null) : null;
   const tipoAtividade = String(formData.get("tipoAtividade") ?? "").trim();
   const observacoesSessao = String(formData.get("observacoesSessao") ?? "").trim();
 
@@ -35,15 +42,19 @@ export async function criarSessaoComAvaliacao(formData: FormData) {
     : 3;
   const observacoesAvaliacao = String(formData.get("observacoesAvaliacao") ?? "").trim();
 
+  if (!idProjeto) voltarComErro("Selecione um projeto válido.");
+  if (idTarefaRaw && !idTarefa) voltarComErro("Selecione uma tarefa válida.");
+
+  const erroData = validarDataSessao(dataSessaoStr);
+  if (erroData) voltarComErro(erroData);
+
   const erroSessao = validarSessao({
     duracaoMinutos,
     usouIa,
     idFerramenta,
     tipoAtividade,
   });
-  if (erroSessao) {
-    redirect(`/sessoes/nova?erro=${encodeURIComponent(erroSessao)}`);
-  }
+  if (erroSessao) voltarComErro(erroSessao);
 
   const erroAvaliacao = validarNotasAvaliacao({
     produtividade,
@@ -53,18 +64,33 @@ export async function criarSessaoComAvaliacao(formData: FormData) {
     fluidez,
     qualidadeFeedback,
   });
-  if (erroAvaliacao) {
-    redirect(`/sessoes/nova?erro=${encodeURIComponent(erroAvaliacao)}`);
+  if (erroAvaliacao) voltarComErro(erroAvaliacao);
+
+  const vinculo = await prisma.usuarioProjeto.findUnique({
+    where: { idUsuario_idProjeto: { idUsuario: usuario!.idUsuario, idProjeto: idProjeto! } },
+  });
+  if (!vinculo) voltarComErro("Você só pode registrar sessões em projetos dos quais participa.");
+
+  if (idTarefa) {
+    const tarefa = await prisma.tarefa.findFirst({ where: { idTarefa, idProjeto } });
+    if (!tarefa) voltarComErro("A tarefa selecionada não pertence ao projeto da sessão.");
   }
 
-  const dataSessao = dataSessaoStr ? new Date(dataSessaoStr) : new Date();
+  if (usouIa) {
+    const ferramenta = await prisma.ferramentaIa.findFirst({
+      where: { idFerramenta: idFerramenta!, ativa: true },
+    });
+    if (!ferramenta) voltarComErro("Selecione uma ferramenta de IA ativa.");
+  }
+
+  const dataSessao = new Date(`${dataSessaoStr}T00:00:00.000Z`);
 
   const sessaoCriada = await prisma.$transaction(async (tx) => {
     const s = await tx.sessaoDesenvolvimento.create({
       data: {
         idUsuario: usuario!.idUsuario,
-        idProjeto,
-        idTarefa: idTarefa || null,
+        idProjeto: idProjeto!,
+        idTarefa,
         dataSessao,
         duracaoMinutos,
         usouIa,
@@ -103,7 +129,12 @@ export async function criarSessaoComAvaliacao(formData: FormData) {
     });
 
     const checagem = calcularSituacaoAtencao(ultimasSessoes);
-    if (checagem.disparar && checagem.motivo) {
+    // Enquanto houver uma situação em aberto, novas sessões não geram outra:
+    // o gestor vê um alerta por desenvolvedor, não um por sessão.
+    const situacaoAberta = await prisma.situacaoAtencao.findFirst({
+      where: { idUsuario: usuario!.idUsuario, acompanhada: false },
+    });
+    if (checagem.disparar && checagem.motivo && !situacaoAberta) {
       await prisma.situacaoAtencao.create({
         data: {
           idSessao: sessaoCriada.idSessao,
@@ -125,12 +156,14 @@ export async function criarSessaoComAvaliacao(formData: FormData) {
 export async function marcarSituacaoAcompanhada(formData: FormData) {
   const usuario = await getUsuarioAtual();
   if (!usuario) redirect("/login");
+  if (!podeAcompanharSituacao(usuario!.perfil.nome)) redirect("/historico");
 
-  const idSituacao = Number(formData.get("idSituacao"));
+  const idSituacao = lerIdPositivo(formData.get("idSituacao"));
+  if (!idSituacao) redirect("/dashboard");
   const observacoes = String(formData.get("observacoes") ?? "").trim();
 
-  await prisma.situacaoAtencao.update({
-    where: { idSituacao },
+  await prisma.situacaoAtencao.updateMany({
+    where: { idSituacao, acompanhada: false },
     data: {
       acompanhada: true,
       observacoes: observacoes || "Acompanhada pelo gestor.",
@@ -138,5 +171,5 @@ export async function marcarSituacaoAcompanhada(formData: FormData) {
   });
 
   revalidatePath("/dashboard");
-  revalidatePath("/dashboard/atencao");
+  revalidatePath("/historico");
 }

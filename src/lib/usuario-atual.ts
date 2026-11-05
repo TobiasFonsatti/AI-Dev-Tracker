@@ -10,10 +10,16 @@ export async function getUsuarioAtual() {
 
   if (!user) return null;
 
-  return prisma.usuario.findUnique({
+  const usuario = await prisma.usuario.findUnique({
     where: { authUserId: user.id },
     include: { perfil: true },
   });
+
+  // Conta desativada com sessão ainda aberta: a rota encerra a sessão, porque
+  // um Server Component não pode alterar os cookies de autenticação.
+  if (usuario && usuario.status !== "ATIVO") redirect("/conta-inativa");
+
+  return usuario;
 }
 
 export async function exigirAdmin() {

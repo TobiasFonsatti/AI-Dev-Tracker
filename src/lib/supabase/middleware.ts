@@ -31,7 +31,9 @@ export async function updateSession(request: NextRequest) {
   const path = request.nextUrl.pathname;
   const rotaPublica = path === "/login" || path === "/cadastro";
 
-  if (!user && !rotaPublica && path !== "/") {
+  const rotaLivre = path === "/" || path === "/privacidade" || path === "/conta-inativa";
+
+  if (!user && !rotaPublica && !rotaLivre) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     return NextResponse.redirect(url);

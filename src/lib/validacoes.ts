@@ -21,6 +21,15 @@ export function validarCadastro(nome: string, email: string, senha: string): str
   return null;
 }
 
+export const STATUS_TAREFA = ["PENDENTE", "EM_ANDAMENTO", "CONCLUIDA", "CANCELADA"];
+export const PRIORIDADES_TAREFA = ["BAIXA", "MEDIA", "ALTA"];
+export const STATUS_USUARIO = ["ATIVO", "INATIVO", "BLOQUEADO"];
+
+export function validarAceitePrivacidade(aceite: unknown): string | null {
+  if (aceite !== "on") return "É preciso aceitar o aviso de privacidade para criar a conta.";
+  return null;
+}
+
 export function validarDuracaoSessaoMinutos(duracaoMinutos: number): string | null {
   if (!Number.isFinite(duracaoMinutos) || duracaoMinutos <= 0) {
     return "A duração precisa ser um número positivo de minutos.";
