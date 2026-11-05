@@ -64,8 +64,8 @@ Legenda — **Prioridade (MoSCoW):** Must = obrigatório para o MVP · Should = 
 
 | # | História | Status | Observação |
 |---|---|---|---|
-| 11 | Histórico filtrável por período | ✅ Concluída | Filtro por período adicionado, faltava para o critério de aceite |
-| 13 | Filtros do dashboard por período | ✅ Concluída | Filtro por período adicionado; o painel de alertas também passou a respeitar os filtros |
-| 16 | Validações em tela e banco | 🟡 Em validação | Regras reforçadas e `db/constraints.sql` criado; falta aplicar as constraints no banco do Supabase |
-| 17 | Deploy público por URL | 🟡 Em andamento | Imagem Docker e `docker-compose.yml` prontos; falta publicar no servidor próprio |
-| 18 | README completo | 🟡 Em validação | Passos de deploy, constraints e seed adicionados; falta testar em máquina limpa |
+| 11 | Histórico filtrável por período | ✅ Concluída | Filtro por período adicionado no histórico pessoal |
+| 13 | Filtros do dashboard por período | ✅ Concluída | Filtro por período adicionado no dashboard da equipe |
+| 16 | Validações em tela e banco | ✅ Concluída | Validações em Server Actions e 11 constraints CHECK aplicadas no PostgreSQL do Supabase |
+| 17 | Deploy público por URL | 🟡 Em andamento | Imagem Docker e `docker-compose.yml` prontos e validados; publicação final em servidor próprio em andamento |
+| 18 | README completo | ✅ Concluída | README detalhado com stack, pré-requisitos, instalação, scripts e seeds |

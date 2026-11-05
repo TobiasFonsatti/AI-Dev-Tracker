@@ -10,13 +10,9 @@
     "postinstall": "prisma generate",
     "db:push": "prisma db push",
     "db:seed": "tsx prisma/seed.ts",
-<<<<<<< HEAD
-    "test": "node --experimental-strip-types scripts/test-runner.mjs"
-=======
     "db:seed:demo": "tsx prisma/seed-demo.ts",
     "db:constraints": "node scripts/aplicar-constraints.mjs",
     "test": "vitest run"
->>>>>>> 32aa3998cf216287cd92033ae9e4a91c0e83323c
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.10.0",
