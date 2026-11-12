@@ -20,10 +20,9 @@ alta dificuldade associadas ao uso frequente de IA).
 | Ambiente | Status |
 |---|---|
 | **Local (desenvolvimento)** | ✅ Funcional — `npm run dev` na porta 3000 |
-| **Produção** | 🔜 Imagem Docker pronta; publicação em servidor próprio com domínio próprio pendente (ver [Deploy](#deploy)) |
+| **Produção** | ✅ No ar em [https://aidevtracker.tobiasfonsatti.com.br/](https://aidevtracker.tobiasfonsatti.com.br/) (Docker + Cloudflare Tunnel com HTTPS) |
 
-> A URL pública entra aqui assim que o deploy for feito. As instruções para
-> reproduzir o ambiente estão detalhadas na seção **Como rodar localmente**.
+> A aplicação está em produção no link acima, operando com banco gerenciado no Supabase e container Docker em servidor próprio. As instruções para reproduzir o ambiente estão detalhadas na seção **Como rodar localmente**.
 
 ## Stack Tecnológica
 

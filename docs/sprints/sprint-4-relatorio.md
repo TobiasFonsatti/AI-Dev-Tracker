@@ -40,5 +40,5 @@ Ver a seção "Atualização de status — Sprint 4 (E8)" em [docs/backlog.md](.
 
 | Risco/impedimento | Impacto | Mitigação |
 |---|---|---|
-| Deploy em produção com domínio próprio | Médio | Estrutura Docker validada e pronta para publicação final |
+| Deploy em produção com domínio próprio | Baixo | Concluído em 12/11/2026: acessível publicamente em https://aidevtracker.tobiasfonsatti.com.br/ |
 | Apresentação da Feira de Projetos (E10) | Médio | Banco populado com seed de demonstração (4 contas e 24 sessões) permitindo demonstração imediata |
