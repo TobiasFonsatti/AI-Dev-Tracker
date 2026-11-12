@@ -57,6 +57,6 @@ Implementar o núcleo funcional da aplicação: registro de sessão de desenvolv
 
 - [x] Código no repositório na branch main (via PR revisado)
 - [x] Testes unitários passando (`npm run test`)
-- [ ] Fluxo demonstrado ponta a ponta contra banco real (Supabase — dependente de revisão de credenciais do .env)
+- [x] Fluxo demonstrado ponta a ponta contra banco real (Supabase)
 - [x] Backlog atualizado
 - [x] Documentos da entrega no repositório

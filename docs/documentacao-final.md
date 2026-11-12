@@ -53,3 +53,4 @@ A arquitetura consolidada segue o padrão monolítico modular moderno com Next.j
 ## 4. Como reproduzir e rodar localmente
 
 As instruções completas de pré-requisitos, variáveis de ambiente, migrações, scripts de seed e execução estão detalhadas no [`README.md`](../README.md).
+

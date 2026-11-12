@@ -29,5 +29,5 @@
 |---|---|---|
 | Restabelecer acesso ao Supabase e aplicar constraints | Artur & Tobias | Concluído |
 | Atualizar relatório de testes e termo de aceite | Artur | Concluído |
-| Concluir apontamento de DNS e deploy no servidor próprio | Tobias | Em andamento |
-| Preparar material de apresentação para a Feira de Projetos (E10) | Artur & Tobias | Planejado |
+| Concluir apontamento de DNS e deploy no servidor próprio | Tobias | Concluído (https://aidevtracker.tobiasfonsatti.com.br/) |
+| Preparar documentação e roteiro do vídeo da Mostra Virtual (E10) | Artur & Tobias | Concluído |

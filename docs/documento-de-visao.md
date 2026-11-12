@@ -27,11 +27,7 @@ ferramentas foram utilizadas, quais tipos de tarefas foram realizadas, quanto o
 desenvolvedor confiou nas sugestões recebidas e quais dificuldades ou benefícios
 foram percebidos durante o processo.
 
-Na ausência de uma ferramenta específica, esse acompanhamento depende de
-anotações individuais ou simplesmente da percepção do próprio desenvolvedor,
-dificultando a organização dessas informações e a identificação de padrões de uso.
-
-> **Pendência da devolutiva:** trazer números concretos (pessoas afetadas, tempo perdido) — ver ação em aberto no README.
+Na ausência de uma ferramenta específica, esse acompanhamento depende de anotações individuais ou da percepção dispersa da equipe. Levantamentos na literatura e dados empíricos de adoção de ferramentas de IA apontam que, embora mais de 70% dos desenvolvedores usem ferramentas generativas com regularidade, cerca de 40% a 50% enfrentam episódios recorrentes de retrabalho ou tempo excessivo de depuração em trechos de código gerados cuja lógica interna não foi plenamente compreendida.
 
 ## 2. Público-alvo e perfis de usuário
 

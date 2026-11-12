@@ -73,4 +73,4 @@
 
 - A Content Security Policy cobre `frame-ancestors`, `base-uri` e `object-src`, mantendo flexibilidade para scripts do Next.js.
 - O aceite do aviso de privacidade é obrigatório para criação de conta, armazenado de forma implícita no momento do cadastro.
-- A publicação no servidor com domínio próprio final está preparada via container Docker (`Dockerfile` e `docker-compose.yml`), operando atualmente no banco de dados Supabase em nuvem.
+- A publicação em servidor próprio com domínio próprio e HTTPS foi concluída com sucesso via container Docker e Cloudflare Tunnel, acessível em [https://aidevtracker.tobiasfonsatti.com.br/](https://aidevtracker.tobiasfonsatti.com.br/).

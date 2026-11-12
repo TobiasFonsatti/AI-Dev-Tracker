@@ -41,3 +41,4 @@
 * **Áudio:** Use microfone de headset ou fone de ouvido em local silencioso.
 * **Navegador:** Zoom em 125%, abas pessoais fechadas, URL do deploy visível.
 * **Dados plausíveis:** O banco já possui o seed com 4 usuários e 24 sessões de teste para evitar telas vazias.
+

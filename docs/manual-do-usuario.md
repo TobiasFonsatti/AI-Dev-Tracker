@@ -96,3 +96,4 @@ O perfil Administrador gerencia as configurações mestras do sistema.
 
 **5. Uma situação de atenção sumiu do painel de pendências.**  
 *Situações marcadas como acompanhadas pelo Gestor saem da lista de pendências e ficam registradas no histórico de acompanhamento com as observações registradas.*
+

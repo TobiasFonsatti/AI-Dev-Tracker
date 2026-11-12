@@ -73,11 +73,11 @@ CT05, CT06, CT07 verificados ponta a ponta no navegador contra o Supabase real.
 
 ## Os 4 documentos da entrega
 
-1. **[`sprint-1-relatorio.md`](sprint-1-relatorio.md)** ✅ escrito — factual, sem pendência
-2. **[`sprint-1-evidencias-teste.md`](sprint-1-evidencias-teste.md)** ✅ escrito — factual, sem pendência
-3. **[`sprint-1-retrospectiva.md`](sprint-1-retrospectiva.md)** ⏳ estrutura pronta, reflexão pendente — **precisa ser feita em conjunto pelos dois**
-4. **[`sprint-1-contribuicao-tobias.md`](sprint-1-contribuicao-tobias.md)** ⏳ rascunho pronto, revisar e completar seções 3–4
-5. **[`sprint-1-contribuicao-artur.md`](sprint-1-contribuicao-artur.md)** ❌ em branco — Artur não participou desta sessão, ver nota no próprio arquivo
+1. **[`sprint-1-relatorio.md`](sprint-1-relatorio.md)** ✅ escrito e validado
+2. **[`sprint-1-evidencias-teste.md`](sprint-1-evidencias-teste.md)** ✅ escrito e validado
+3. **[`sprint-1-retrospectiva.md`](sprint-1-retrospectiva.md)** ✅ preenchido em conjunto por Tobias e Artur
+4. **[`sprint-1-contribuicao-tobias.md`](sprint-1-contribuicao-tobias.md)** ✅ preenchido e assinado
+5. **[`sprint-1-contribuicao-artur.md`](sprint-1-contribuicao-artur.md)** ✅ preenchido e assinado
 
 ## Retomando de onde parou
 

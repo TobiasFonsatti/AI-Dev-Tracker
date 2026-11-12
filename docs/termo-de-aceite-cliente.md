@@ -22,14 +22,14 @@
 
 ## 2. Ressalvas / pendências
 
-- O deploy final com domínio próprio e certificado HTTPS está pronto via Docker e em fase de apontamento externo para a apresentação final (E10 e Feira).
+- O deploy final com domínio próprio e certificado HTTPS estava em fase de apontamento externo na data da assinatura inicial (05/11), tendo sido concluído com êxito em 12/11/2026 e publicado em [https://aidevtracker.tobiasfonsatti.com.br/](https://aidevtracker.tobiasfonsatti.com.br/).
 - Testes unitários cobrem 47 cenários de negócio; a suíte de testes de integração ponta a ponta pode ser expandida conforme evolução da esteira CI.
 
 ## 3. Parecer
 
+- [x] Aceito com ressalvas (ressalva de deploy superada em 12/11/2026; itens não bloqueantes)
 - [ ] Aceito sem ressalvas
-- [x] Aceito com ressalvas (listadas acima, não bloqueantes)
-- [ ] Não aceito — motivo: [...]
+- [ ] Não aceito — motivo: [nenhum]
 
 ## 4. Assinatura
 

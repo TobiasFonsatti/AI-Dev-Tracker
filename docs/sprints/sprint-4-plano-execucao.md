@@ -31,4 +31,4 @@ Também entraram os ajustes de #11 e #13, porque o filtro por período fazia par
 | Headers de segurança e aviso de privacidade (LGPD) | Concluído |
 | Seed de demonstração | Concluído e executado no Supabase |
 | Dockerfile e `docker-compose.yml` | Concluído |
-| Publicar no servidor próprio | Pendente |
+| Publicar no servidor próprio | Concluído (ativo em https://aidevtracker.tobiasfonsatti.com.br/) |

@@ -31,3 +31,4 @@ Aprendemos que critérios de aceite e definição de pronto não são burocracia
 - [ ] Captura 1: Formulário de registro de sessão com avaliação de IA (`/sessoes/nova`)
 - [ ] Captura 2: Dashboard analítico com gráficos e métricas consolidadas (`/dashboard`)
 - [ ] Captura 3: Painel de acompanhamento de situações de atenção (`/dashboard#situacoes`)
+
