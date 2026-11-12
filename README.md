@@ -130,7 +130,7 @@ A aplicação roda em Docker. No servidor, com Docker e Docker Compose instalado
    ```bash
    docker compose up -d --build
    ```
-4. Aponte o domínio para `127.0.0.1:3000`, usando proxy reverso ou túnel com HTTPS.
+4. Aponte o domínio para `127.0.0.1:3200`, usando proxy reverso ou túnel com HTTPS.
    A porta não fica exposta para fora do servidor.
 5. No Supabase, em **Authentication → URL Configuration**, cadastre a URL pública
    como *Site URL*.

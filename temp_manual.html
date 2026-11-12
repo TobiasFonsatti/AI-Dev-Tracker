@@ -1,0 +1,1111 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Manual do Aluno — Laboratório de Engenharia de Software</title>
+<style>
+
+/* ============================================================
+   TOKENS
+   ============================================================ */
+:root{
+  color-scheme: light;
+  --paper:          #FAF8F3;
+  --surface:        #FFFFFF;
+  --ink:            #1B2430;
+  --ink-soft:       #454F5E;
+  --ink-faint:      #6B7686;
+  --line:           #E3DED2;
+  --line-blue:      #CFDDE2;
+  --blueprint:      #1B6E85;
+  --blueprint-deep: #124F60;
+  --blueprint-wash: #E7F1F3;
+  --copper:         #B15A24;
+  --copper-deep:    #8A4419;
+  --copper-wash:    #F7ECDE;
+  --code-bg:        #F1EEE4;
+  --row-alt:        rgba(27,110,133,0.035);
+  --shadow:         rgba(27,36,48,0.10);
+  --phase-1:        #D6EAEF;
+  --phase-2:        #A9D2DC;
+  --phase-3:        #5FA3B6;
+  --phase-4:        #1B6E85;
+  --phase-neutral:  #DEDACD;
+
+  --font-display: ui-serif, Georgia, "Times New Roman", serif;
+  --font-body: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "Cascadia Code", "Segoe UI Mono", Consolas, "Roboto Mono", monospace;
+}
+
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme: dark;
+    --paper:          #14181D;
+    --surface:        #1B2027;
+    --ink:            #ECE8DE;
+    --ink-soft:       #ABB4C0;
+    --ink-faint:      #7E8998;
+    --line:           #2B323C;
+    --line-blue:      #33424C;
+    --blueprint:      #4FB3CE;
+    --blueprint-deep: #8FD3E6;
+    --blueprint-wash: rgba(79,179,206,0.14);
+    --copper:         #E2914F;
+    --copper-deep:    #F2B27C;
+    --copper-wash:    rgba(226,145,79,0.14);
+    --code-bg:        #232A32;
+    --row-alt:        rgba(79,179,206,0.06);
+    --shadow:         rgba(0,0,0,0.4);
+    --phase-1:        #24424D;
+    --phase-2:        #2F6577;
+    --phase-3:        #3B8CA1;
+    --phase-4:        #4FB3CE;
+    --phase-neutral:  #322E27;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --paper:          #14181D;
+  --surface:        #1B2027;
+  --ink:            #ECE8DE;
+  --ink-soft:       #ABB4C0;
+  --ink-faint:      #7E8998;
+  --line:           #2B323C;
+  --line-blue:      #33424C;
+  --blueprint:      #4FB3CE;
+  --blueprint-deep: #8FD3E6;
+  --blueprint-wash: rgba(79,179,206,0.14);
+  --copper:         #E2914F;
+  --copper-deep:    #F2B27C;
+  --copper-wash:    rgba(226,145,79,0.14);
+  --code-bg:        #232A32;
+  --row-alt:        rgba(79,179,206,0.06);
+  --shadow:         rgba(0,0,0,0.4);
+  --phase-1:        #24424D;
+  --phase-2:        #2F6577;
+  --phase-3:        #3B8CA1;
+  --phase-4:        #4FB3CE;
+  --phase-neutral:  #322E27;
+}
+
+/* ============================================================
+   RESET / BASE
+   ============================================================ */
+*{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--font-body);
+  font-size:16px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+img,svg{ max-width:100%; height:auto; display:block; }
+a{ color:var(--blueprint-deep); text-decoration-color: var(--line-blue); }
+a:focus-visible, button:focus-visible, .navlink:focus-visible{
+  outline:2px solid var(--blueprint);
+  outline-offset:2px;
+}
+h1,h2,h3,h4{
+  font-family:var(--font-display);
+  font-weight:600;
+  color:var(--ink);
+  text-wrap:balance;
+  margin:0;
+}
+p{ margin:0 0 0.9em 0; }
+p:last-child{ margin-bottom:0; }
+strong{ color:var(--ink); }
+
+.wrap{ max-width:760px; margin:0 auto; padding:0 22px; }
+
+@media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior:auto; }
+}
+
+/* ============================================================
+   TOP NAV
+   ============================================================ */
+.topbar{
+  position:sticky; top:0; z-index:50;
+  background:color-mix(in srgb, var(--paper) 88%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom:1px solid var(--line);
+}
+.topbar-inner{
+  max-width:760px; margin:0 auto; padding:0 22px;
+  display:flex; align-items:center; gap:14px;
+  height:52px;
+}
+.brand{
+  font-family:var(--font-mono);
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:0.5px;
+  color:var(--blueprint-deep);
+  white-space:nowrap;
+  flex:none;
+}
+.navscroll{
+  display:flex; gap:4px;
+  overflow-x:auto;
+  scrollbar-width:none;
+  -ms-overflow-style:none;
+}
+.navscroll::-webkit-scrollbar{ display:none; }
+.navlink{
+  flex:none;
+  font-family:var(--font-body);
+  font-size:12.5px;
+  font-weight:600;
+  color:var(--ink-soft);
+  text-decoration:none;
+  padding:6px 10px;
+  border-radius:6px;
+  white-space:nowrap;
+}
+.navlink:hover{ background:var(--blueprint-wash); color:var(--blueprint-deep); }
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero{ padding:44px 0 8px 0; }
+.eyebrow{
+  font-family:var(--font-mono);
+  font-size:12.5px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:var(--blueprint-deep);
+  margin-bottom:10px;
+}
+.hero h1{
+  font-size:clamp(28px, 5vw, 40px);
+  line-height:1.14;
+  max-width:14ch;
+}
+.hero .sub{
+  margin-top:14px;
+  font-size:17px;
+  color:var(--ink-soft);
+  max-width:52ch;
+}
+.meta-row{
+  margin-top:20px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px 10px;
+}
+.meta-pill{
+  font-family:var(--font-mono);
+  font-size:11.5px;
+  color:var(--ink-faint);
+  border:1px solid var(--line-blue);
+  border-radius:20px;
+  padding:4px 11px;
+}
+
+/* ============================================================
+   SECTIONS
+   ============================================================ */
+section.block{
+  padding:46px 0;
+  border-top:1px solid var(--line);
+  scroll-margin-top:64px;
+}
+section.block:first-of-type{ border-top:none; }
+
+.sec-head{
+  display:flex;
+  align-items:baseline;
+  gap:10px;
+  margin-bottom:18px;
+}
+.sec-tag{
+  font-family:var(--font-mono);
+  font-size:12px;
+  font-weight:700;
+  color:var(--blueprint);
+}
+.sec-head h2{ font-size:25px; }
+
+h3{
+  font-family:var(--font-display);
+  font-size:18px;
+  color:var(--blueprint-deep);
+  margin:30px 0 10px 0;
+}
+h3:first-child{ margin-top:0; }
+
+.lede{
+  font-size:17.5px;
+  line-height:1.6;
+  color:var(--ink);
+  margin-bottom:16px;
+}
+
+/* ============================================================
+   CALLOUTS
+   ============================================================ */
+.callout{
+  background:var(--blueprint-wash);
+  border-left:3px solid var(--blueprint);
+  border-radius: 0 8px 8px 0;
+  padding:14px 18px;
+  margin:18px 0;
+}
+.callout-label{
+  display:block;
+  font-family:var(--font-mono);
+  font-size:11px;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  color:var(--blueprint-deep);
+  margin-bottom:6px;
+}
+.callout p{ font-size:15.5px; }
+.callout--warn{ background:var(--copper-wash); border-left-color:var(--copper); }
+.callout--warn .callout-label{ color:var(--copper-deep); }
+
+/* ============================================================
+   DECISION BOX
+   ============================================================ */
+.decision{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin:18px 0;
+}
+.decision-card{
+  border:1px solid var(--line-blue);
+  background:var(--surface);
+  border-radius:10px;
+  padding:16px 18px;
+}
+.decision-card .q{
+  font-family:var(--font-mono);
+  font-size:11px;
+  letter-spacing:0.5px;
+  text-transform:uppercase;
+  color:var(--ink-faint);
+  margin-bottom:8px;
+}
+.decision-card .a{
+  font-weight:700;
+  font-size:16px;
+  color:var(--blueprint-deep);
+  margin-bottom:6px;
+}
+.decision-card p{ font-size:14px; color:var(--ink-soft); }
+
+/* ============================================================
+   TABLES
+   ============================================================ */
+.tablewrap{ overflow-x:auto; margin:16px 0; border-radius:8px; border:1px solid var(--line-blue); }
+table.spec{
+  width:100%;
+  border-collapse:collapse;
+  font-size:14.5px;
+  min-width:520px;
+}
+table.spec th{
+  background:var(--blueprint-wash);
+  color:var(--blueprint-deep);
+  text-align:left;
+  font-family:var(--font-body);
+  font-weight:700;
+  font-size:12.5px;
+  padding:10px 14px;
+  border-bottom:1px solid var(--line-blue);
+  position:sticky; top:0;
+}
+table.spec td{
+  padding:11px 14px;
+  border-bottom:1px solid var(--line);
+  vertical-align:top;
+}
+table.spec tr:last-child td{ border-bottom:none; }
+table.spec tbody tr:nth-child(odd) td{ background:var(--row-alt); }
+table.spec td.num{ font-variant-numeric:tabular-nums; font-family:var(--font-mono); }
+table.spec td.mono{ font-family:var(--font-mono); font-size:13.5px; }
+
+.code{
+  font-family:var(--font-mono);
+  font-size:0.9em;
+  background:var(--code-bg);
+  padding:1px 6px;
+  border-radius:4px;
+  color:var(--blueprint-deep);
+  white-space:nowrap;
+}
+.badge{
+  display:inline-block;
+  font-family:var(--font-mono);
+  font-size:12px;
+  font-weight:700;
+  color:var(--copper-deep);
+  background:var(--copper-wash);
+  border:1px solid var(--copper);
+  border-radius:5px;
+  padding:2px 7px;
+  white-space:nowrap;
+}
+
+/* ============================================================
+   FIGURES
+   ============================================================ */
+.figure{ margin:22px 0; }
+.figure-frame{
+  background:var(--surface);
+  border:1px solid var(--line-blue);
+  border-radius:10px;
+  padding:18px 18px 14px 18px;
+  overflow-x:auto;
+  box-shadow: 0 1px 2px var(--shadow);
+}
+.figure-frame svg{ min-width:640px; }
+figcaption.fig-caption{
+  margin-top:10px;
+  font-size:13.5px;
+  color:var(--ink-faint);
+  line-height:1.5;
+}
+figcaption .fig-num{
+  font-family:var(--font-mono);
+  color:var(--blueprint-deep);
+  font-weight:700;
+  margin-right:6px;
+}
+
+/* ============================================================
+   CHECKLIST
+   ============================================================ */
+ul.plain, ol.plain{ list-style:none; margin:0; padding:0; }
+.checklist{ display:flex; flex-direction:column; gap:10px; margin:16px 0; }
+.checklist li{ display:flex; gap:11px; align-items:flex-start; font-size:15.5px; }
+.checklist .mark{
+  flex:none; width:18px; height:18px; margin-top:2px;
+  border:1.6px solid var(--blueprint);
+  border-radius:4px; position:relative;
+}
+.checklist .mark::after{
+  content:""; position:absolute; left:4.5px; top:1px;
+  width:5px; height:9px;
+  border-right:1.6px solid var(--blueprint);
+  border-bottom:1.6px solid var(--blueprint);
+  transform:rotate(40deg);
+}
+
+/* ============================================================
+   CARD GRIDS
+   ============================================================ */
+.card-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:18px 0; }
+.theme-card{
+  border:1px solid var(--line-blue);
+  border-left:3px solid var(--blueprint);
+  border-radius:8px;
+  padding:13px 15px;
+  background:var(--surface);
+}
+.theme-card .t-num{ font-family:var(--font-mono); font-size:11px; color:var(--blueprint-deep); font-weight:700; }
+.theme-card .t-title{ font-weight:700; font-size:15px; display:block; margin:3px 0 4px 0; }
+.theme-card .t-desc{ font-size:13.5px; color:var(--ink-soft); }
+
+.role-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:18px 0; }
+.role-card{
+  border:1px solid var(--line-blue);
+  border-radius:8px;
+  padding:14px 16px;
+  background:var(--surface);
+}
+.role-card .r-title{ font-weight:700; font-size:15px; color:var(--blueprint-deep); display:block; margin-bottom:5px; }
+.role-card .r-desc{ font-size:13.5px; color:var(--ink-soft); line-height:1.45; }
+.role-card .r-flag{ display:inline-block; margin-top:7px; font-family:var(--font-mono); font-size:11.5px; color:var(--copper-deep); background:var(--copper-wash); border-radius:4px; padding:2px 7px; }
+
+.tri-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin:16px 0 20px 0; }
+.tri-card{
+  border:1px solid var(--line-blue);
+  border-radius:8px;
+  padding:14px 15px;
+  background:var(--surface);
+  text-align:left;
+}
+.tri-card .tri-n{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:22px; height:22px; border-radius:50%;
+  background:var(--blueprint); color:var(--surface);
+  font-family:var(--font-mono); font-size:12px; font-weight:700;
+  margin-bottom:8px;
+}
+.tri-card .tri-t{ display:block; font-weight:700; font-size:14.5px; margin-bottom:4px; }
+.tri-card .tri-d{ font-size:13px; color:var(--ink-soft); }
+
+.tip-list{ display:flex; flex-direction:column; gap:12px; margin:18px 0; }
+.tip{
+  display:flex; gap:14px;
+  border:1px solid var(--line-blue);
+  border-left:3px solid var(--copper);
+  border-radius:8px;
+  padding:14px 16px;
+  background:var(--surface);
+}
+.tip .tip-title{ font-weight:700; font-size:15px; margin-bottom:4px; display:block; }
+.tip .tip-body{ font-size:14px; color:var(--ink-soft); }
+.tip .tip-signal{ font-size:12.5px; color:var(--copper-deep); font-family:var(--font-mono); display:block; margin-bottom:5px; }
+
+/* split */
+.split{ display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:16px 0; }
+.split h4{
+  font-family:var(--font-mono); font-size:11.5px; letter-spacing:0.6px;
+  text-transform:uppercase; color:var(--blueprint-deep); margin:0 0 6px 0;
+}
+.split p{ font-size:14.5px; color:var(--ink-soft); }
+
+.formula{
+  font-family:var(--font-mono);
+  font-size:15px;
+  background:var(--copper-wash);
+  border-left:3px solid var(--copper);
+  border-radius:0 8px 8px 0;
+  padding:14px 18px;
+  margin:16px 0;
+  color:var(--copper-deep);
+}
+.formula strong{ color:var(--copper-deep); }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer{
+  padding:40px 0 60px 0;
+  border-top:1px solid var(--line);
+}
+footer p{
+  font-family:var(--font-mono);
+  font-size:11.5px;
+  color:var(--ink-faint);
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width:620px){
+  .decision, .card-grid, .role-grid, .tri-grid, .split{ grid-template-columns:1fr; }
+  .hero{ padding-top:30px; }
+}
+
+@media print{
+  .topbar{ display:none; }
+  html{ scroll-behavior:auto; }
+}
+
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <span class="brand">LAB·ES</span>
+    <nav class="navscroll" aria-label="Navegação do manual">
+      <a class="navlink" href="#comece">Comece aqui</a>
+      <a class="navlink" href="#trilhas">Trilhas</a>
+      <a class="navlink" href="#requisitos">Requisitos</a>
+      <a class="navlink" href="#cronograma">Cronograma</a>
+      <a class="navlink" href="#papeis">Papéis</a>
+      <a class="navlink" href="#avaliacao">Avaliação</a>
+      <a class="navlink" href="#regras">Regras</a>
+      <a class="navlink" href="#temas">Temas</a>
+      <a class="navlink" href="#entregas">Entregas</a>
+      <a class="navlink" href="#dicas">Dicas</a>
+      <a class="navlink" href="glossario_lab_es.html" style="color:var(--copper-deep);">Glossário ↗</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <div class="hero">
+    <div class="eyebrow">Manual do aluno</div>
+    <h1>Laboratório de Engenharia de Software</h1>
+    <p class="sub">Guia de referência da disciplina. Volte aqui sempre que precisar saber o que entregar, quando entregar e como você é avaliado.</p>
+    <div class="meta-row">
+      <span class="meta-pill">ADS · Fatec Ribeirão Preto</span>
+      <span class="meta-pill">20 semanas · 2 encontros/semana</span>
+      <span class="meta-pill">Equipes de 3–5</span>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       COMECE AQUI
+       ============================================================ -->
+  <section class="block" id="comece">
+    <div class="sec-head"><span class="sec-tag">§1</span><h2>Antes de tudo</h2></div>
+
+    <p class="lede">Você vai atravessar um ciclo completo de desenvolvimento — de requisito a deploy — dentro da sua equipe.</p>
+
+    <div class="callout">
+      <span class="callout-label">O que realmente é avaliado</span>
+      <p>Esta disciplina <strong>não é uma aula de framework</strong>. A tecnologia que você escolhe importa menos do que sua capacidade de mostrar a <strong>rastreabilidade</strong> completa: requisito → modelo → código → teste. Se você não souber explicar linha a linha o que o seu grupo entregou — mesmo o trecho que a IA ajudou a escrever — para efeitos práticos você não entregou.</p>
+    </div>
+
+    <h3>Qual é a minha trilha?</h3>
+    <div class="decision">
+      <div class="decision-card">
+        <span class="q">Se você tem TCC com desenvolvimento de sistema</span>
+        <span class="a">Trilha A</span>
+        <p>Seu TCC e o Laboratório usam o mesmo produto, com escopos separados por uma declaração formal.</p>
+      </div>
+      <div class="decision-card">
+        <span class="q">Se você não tem TCC, ou seu TCC não é de desenvolvimento</span>
+        <span class="a">Trilha B</span>
+        <p>Você parte de um cliente real ou de um tema do banco de temas do professor.</p>
+      </div>
+    </div>
+
+    <p>As duas trilhas têm <strong>as mesmas entregas (E1–E10) e a mesma rubrica</strong> — só muda a origem do problema. Detalhes de cada uma em <a href="#trilhas">§2 Trilhas</a>.</p>
+  </section>
+
+  <!-- ============================================================
+       TRILHAS
+       ============================================================ -->
+  <section class="block" id="trilhas">
+    <div class="sec-head"><span class="sec-tag">§2</span><h2>Trilhas</h2></div>
+
+    <h3>Trilha A — vinculada ao seu TCC</h3>
+    <p>O TCC e o Laboratório são avaliados por bancas diferentes, sobre recortes diferentes do mesmo produto:</p>
+
+    <div class="tablewrap">
+      <table class="spec">
+        <thead><tr><th style="width:50%">O TCC avalia</th><th>O Laboratório avalia</th></tr></thead>
+        <tbody>
+          <tr><td>Monografia, revisão bibliográfica, metodologia, justificativa, resultados/discussão</td><td>Artefatos de engenharia: requisitos, modelagem, arquitetura, plano e casos de teste</td></tr>
+          <tr><td>Fundamentação teórica e contribuição científica</td><td>Código versionado, revisado por pares, testado e implantado</td></tr>
+          <tr><td>Defesa perante banca</td><td>Sprint reviews e demonstração funcional em sala</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout callout--warn">
+      <span class="callout-label">Sua entrega obrigatória — Semana 1</span>
+      <p>Uma <strong>Declaração de Escopo Compartilhado</strong> (1 página, assinada por você e com ciência do seu orientador), dizendo o que já existia antes do semestre e o que você vai construir <em>durante</em> o Laboratório. Trabalho que já estava pronto não conta como incremento — e sem essa declaração, o professor não consegue separar as duas entregas.</p>
+    </div>
+
+    <p><strong>Como montar a equipe:</strong></p>
+    <div class="split">
+      <div>
+        <h4>A1 · Você é o dono do produto</h4>
+        <p>Você atua como <em>Product Owner</em> e traz o problema; os demais desenvolvem com você. Vantagem: aproveita um problema que você já estudou a fundo. Risco real: os colegas virarem "mão de obra" — para evitar isso, cada integrante precisa ter módulos próprios com commits visíveis, e você também precisa programar.</p>
+      </div>
+      <div>
+        <h4>A2 · Recorte individual em equipe temática</h4>
+        <p>Você e mais um ou dois colegas com TCCs próximos formam equipe, e o produto do semestre é um recorte comum aos temas de vocês (ex.: um módulo de autenticação e relatórios compartilhado entre os TCCs).</p>
+      </div>
+    </div>
+
+    <h3>Trilha B — projeto novo</h3>
+    <p>Se você não tem TCC (ou tem TCC sem desenvolvimento), o problema do seu projeto vem de uma destas fontes, nesta ordem de preferência:</p>
+    <ol class="plain" style="display:flex; flex-direction:column; gap:10px; margin-top:10px;">
+      <li><strong>1 · Cliente real</strong> — setor administrativo da Fatec, coordenações, ONGs, comércio local, projetos de extensão. É a opção mais rica: gera requisitos ambíguos de verdade, do tipo que você só aprende lidando com gente de verdade.</li>
+      <li><strong>2 · Banco de temas do professor</strong> — veja a lista completa em <a href="#temas">§8 Temas</a>.</li>
+      <li><strong>3 · Adaptação do seu TCC ao desenvolvimento</strong> — só se o professor avaliar que é viável para os objetivos da disciplina.</li>
+    </ol>
+  </section>
+
+  <!-- ============================================================
+       REQUISITOS
+       ============================================================ -->
+  <section class="block" id="requisitos">
+    <div class="sec-head"><span class="sec-tag">§3</span><h2>Requisitos mínimos do produto</h2></div>
+
+    <p>Valem para as duas trilhas. <strong>Seu projeto só é aceito na Semana 2</strong> se cobrir todos os itens abaixo — é o que garante que ninguém entregue só um "CRUD de cadastro de clientes".</p>
+
+    <ul class="checklist">
+      <li><span class="mark"></span><span><strong>Autenticação com pelo menos 2 perfis</strong> e controle de acesso diferenciado por perfil</span></li>
+      <li><span class="mark"></span><span><strong>Mínimo de 6 entidades</strong> com relacionamentos, incluindo ao menos um N:N</span></li>
+      <li><span class="mark"></span><span><strong>Uma regra de negócio não trivial</strong> — cálculo, agendamento com conflito, controle de estoque, fluxo de aprovação, matching</span></li>
+      <li><span class="mark"></span><span><strong>Uma consulta agregada</strong> exibida como relatório ou dashboard (<span class="code">GROUP BY</span>, <span class="code">JOIN</span> de 3+ tabelas)</span></li>
+      <li><span class="mark"></span><span><strong>Validações</strong> em interface e em banco (constraints, <span class="code">NOT NULL</span>, <span class="code">UNIQUE</span>, FK)</span></li>
+      <li><span class="mark"></span><span><strong>Deploy público acessível</strong> por URL — não vale "roda na minha máquina"</span></li>
+      <li><span class="mark"></span><span><strong>Repositório Git</strong> público ou compartilhado, com README que permita a um terceiro subir o projeto do zero</span></li>
+    </ul>
+
+    <div class="callout">
+      <p>Nenhum destes sete itens é opcional. Se o seu projeto não cobre um deles, negocie o recorte com o professor <strong>antes</strong> da Semana 2 — depois disso, mudar de rumo custa caro.</p>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CRONOGRAMA
+       ============================================================ -->
+  <section class="block" id="cronograma">
+    <div class="sec-head"><span class="sec-tag">§4</span><h2>Cronograma das 18 semanas</h2></div>
+
+    <div class="callout">
+      <span class="callout-label">Datas do semestre 2026-2</span>
+      <p>Como a turma só teve contato com o projeto nesta semana (compromissos acadêmicos), a E1 fica para a próxima sexta (21/08) — a Semana 1 do Laboratório agora começa aí, e não mais em 14/08. O cronograma vai até 11/12/2026. A Feira de Projetos e as semanas sem aula são compromissos institucionais fixos — não dá pra mudar. Para absorver a semana perdida sem tocar nessas datas fixas, a Sprint 1 também foi comprimida para 1 semana só (como já era o caso da Sprint 4).</p>
+    </div>
+
+    <div class="callout callout--warn">
+      <span class="callout-label">Atualização de 08/11 · Feira substituída pela Mostra Virtual</span>
+      <p>A Feira de Projetos presencial de 13/11 não vai acontecer. No lugar da apresentação ao vivo, cada equipe grava um <strong>vídeo de 8 a 12 minutos</strong> que demonstra o software e o aprendizado de engenharia de software ágil. Os vídeos vão compor o site da <strong>Mostra Virtual de Projetos</strong>. A E10 completa (documentação final + deploy estável + vídeo + ficha da mostra) vence em <strong>20/11/2026, às 23h59</strong>, com envio online. As entregas E5 a E9 serão corrigidas no fechamento do semestre. Orientações completas no <a href="roteiro_video_mostra_virtual.html">Roteiro do Vídeo da Mostra Virtual</a>.</p>
+    </div>
+
+    <figure class="figure">
+      <div class="figure-frame">
+        <svg viewBox="0 0 1000 295" role="img" aria-label="Linha do tempo das 18 semanas do Laboratório (21/08 a 11/12/2026), com as fases Concepcao, Modelagem, Sprints, Fechamento e Encerramento, os marcos de entrega E1 a E10, com a E10 (vídeo da Mostra Virtual) na semana 15" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<marker id="tl-arrow" viewBox="0 0 8 8" refX="6" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L8,4 L0,8 z" fill="var(--copper)"/></marker>
+</defs>
+<line x1="85.3" y1="103.0" x2="85.3" y2="150" stroke="var(--copper)" stroke-width="1.2" stroke-dasharray="1.5,2.5"/>
+<circle cx="85.3" cy="96" r="6.5" fill="var(--surface)" stroke="var(--copper)" stroke-width="1.6"/>
+<text x="85.3" y="99.5" text-anchor="middle" font-family="var(--font-mono)" font-size="7" fill="var(--copper)" font-weight="700">1</text>
+<text x="85.3" y="34" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="var(--copper)" font-weight="700">E1</text>
+<line x1="135.8" y1="103.0" x2="135.8" y2="150" stroke="var(--copper)" stroke-width="1.2" stroke-dasharray="1.5,2.5"/>
+<circle cx="135.8" cy="96" r="6.5" fill="var(--surface)" stroke="var(--copper)" stroke-width="1.6"/>
+<text x="135.8" y="99.5" text-anchor="middle" font-family="var(--font-mono)" font-size="7" fill="var(--copper)" font-weight="700">2</text>
+<text x="135.8" y="34" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="var(--copper)" font-weight="700">E2</text>
+<line x1="186.4" y1="103.0" x2="186.4" y2="150" stroke="var(--copper)" stroke-width="1.2" stroke-dasharray="1.5,2.5"/>
+<circle cx="186.4" cy="96" r="6.5" fill="var(--surface)" stroke="var(--copper)" stroke-width="1.6"/>
+<text x="186.4" y="99.5" text-anchor="middle" font-family="var(--font-mono)" font-size="7" fill="var(--copper)" font-weight="700">3</text>
+<text x="186.4" y="34" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="var(--copper)" font-weight="700">E3</text>
+<line x1="236.9" y1="103.0" x2="236.9" y2="150" stroke="var(--copper)" stroke-width="1.2" stroke-dasharray="1.5,2.5"/>
+<circle cx="236.9" cy="96" r="6.5" fill="var(--surface)" stroke="var(--copper)" stroke-width="1.6"/>
+<text x="236.9" y="99.5" text-anchor="middle" font-family="var(--font-mono)" font-size="7" fill="var(--copper)" font-weight="700">4</text>
+<text x="236.9" y="34" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="var(--copper)" font-weight="700">E4</text>
+<line x1="287.5" y1="103.0" x2="287.5" y2="150" stroke="var(--copper)" stroke-width="1.2" stroke-dasharray="1.5,2.5"/>
+<circle cx="287.5" cy="96" r="6.5" fill="var(--surface)" stroke="var(--copper)" stroke-width="1.6"/>
+<text x="287.5" y="99.5" text-anchor="middle" font-family="var(--font-mono)" font-size="7" fill="var(--copper)" font-weight="700">5</text>
+<text x="287.5" y="34" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="var(--copper)" font-weight="700">E5</text>
+<line x1="439.2" y1="103.0" x2="439.2" y2="150" stroke="var(--copper)" stroke-width="1.2" stroke-dasharray="1.5,2.5"/>
+<circle cx="439.2" cy="96" r="6.5" fill="var(--surface)" stroke="var(--copper)" stroke-width="1.6"/>
+<text x="439.2" y="99.5" text-anchor="middle" font-family="var(--font-mono)" font-size="7" fill="var(--copper)" font-weight="700">6</text>
+<text x="439.2" y="34" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="var(--copper)" font-weight="700">E6</text>
+<line x1="540.3" y1="103.0" x2="540.3" y2="150" stroke="var(--copper)" stroke-width="1.2" stroke-dasharray="1.5,2.5"/>
+<circle cx="540.3" cy="96" r="6.5" fill="var(--surface)" stroke="var(--copper)" stroke-width="1.6"/>
+<text x="540.3" y="99.5" text-anchor="middle" font-family="var(--font-mono)" font-size="7" fill="var(--copper)" font-weight="700">7</text>
+<text x="540.3" y="34" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="var(--copper)" font-weight="700">E7</text>
+<line x1="641.4" y1="103.0" x2="641.4" y2="150" stroke="var(--copper)" stroke-width="1.2" stroke-dasharray="1.5,2.5"/>
+<circle cx="641.4" cy="96" r="6.5" fill="var(--surface)" stroke="var(--copper)" stroke-width="1.6"/>
+<text x="641.4" y="99.5" text-anchor="middle" font-family="var(--font-mono)" font-size="7" fill="var(--copper)" font-weight="700">8</text>
+<text x="641.4" y="34" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="var(--copper)" font-weight="700">E8</text>
+<line x1="691.9" y1="103.0" x2="691.9" y2="150" stroke="var(--copper)" stroke-width="1.2" stroke-dasharray="1.5,2.5"/>
+<circle cx="691.9" cy="96" r="6.5" fill="var(--surface)" stroke="var(--copper)" stroke-width="1.6"/>
+<text x="691.9" y="99.5" text-anchor="middle" font-family="var(--font-mono)" font-size="7" fill="var(--copper)" font-weight="700">9</text>
+<text x="691.9" y="34" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="var(--copper)" font-weight="700">E9</text>
+<line x1="793.1" y1="103.0" x2="793.1" y2="150" stroke="var(--copper)" stroke-width="1.2" stroke-dasharray="1.5,2.5"/>
+<circle cx="793.1" cy="96" r="6.5" fill="var(--surface)" stroke="var(--copper)" stroke-width="1.6"/>
+<text x="793.1" y="99.5" text-anchor="middle" font-family="var(--font-mono)" font-size="7" fill="var(--copper)" font-weight="700">10</text>
+<text x="793.1" y="34" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="var(--copper)" font-weight="700">E10</text>
+<line x1="810.1" y1="81.5" x2="810.1" y2="150" stroke="var(--ink)" stroke-width="1.2" stroke-dasharray="1.5,2.5"/>
+<circle cx="810.1" cy="74" r="7.5" fill="var(--ink)" />
+<text x="810.1" y="77" text-anchor="middle" font-family="var(--font-body)" font-size="9" fill="var(--paper)" font-weight="700">★</text>
+<text x="810.1" y="12" text-anchor="middle" font-family="var(--font-mono)" font-size="9.5" fill="var(--ink)" font-weight="700">MOSTRA</text>
+<text x="60" y="122" font-family="var(--font-body)" font-size="9.5" fill="var(--ink-faint)">Marcos de entrega (E1–E10) e Mostra Virtual</text>
+<rect x="60.0" y="150" width="101.1" height="40" fill="var(--phase-1)" />
+<rect x="161.1" y="150" width="101.1" height="40" fill="var(--phase-2)" />
+<rect x="262.2" y="150" width="404.5" height="40" fill="var(--phase-3)" />
+<rect x="666.7" y="150" width="151.7" height="40" fill="var(--phase-4)" />
+<rect x="818.4" y="150" width="151.6" height="40" fill="var(--phase-neutral)" />
+<circle cx="287.5" cy="170.0" r="10" fill="var(--surface)" opacity="0.94"/>
+<text x="287.5" y="173.5" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="var(--blueprint-deep)" font-weight="700">1</text>
+<rect x="311.8" y="150" width="2" height="40" fill="var(--surface)" />
+<rect x="312.8" y="150" width="50.5" height="40" fill="var(--surface)" opacity="0.55"/>
+<text x="338.1" y="223.0" text-anchor="middle" font-family="var(--font-mono)" font-size="7" fill="var(--copper)" font-style="italic">repos.</text>
+<rect x="362.3" y="150" width="2" height="40" fill="var(--surface)" />
+<circle cx="413.9" cy="170.0" r="10" fill="var(--surface)" opacity="0.94"/>
+<text x="413.9" y="173.5" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="var(--blueprint-deep)" font-weight="700">2</text>
+<rect x="463.4" y="150" width="2" height="40" fill="var(--surface)" />
+<circle cx="515.0" cy="170.0" r="10" fill="var(--surface)" opacity="0.94"/>
+<text x="515.0" y="173.5" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="var(--blueprint-deep)" font-weight="700">3</text>
+<rect x="564.6" y="150" width="2" height="40" fill="var(--surface)" />
+<rect x="565.6" y="150" width="50.5" height="40" fill="var(--surface)" opacity="0.55"/>
+<text x="590.8" y="223.0" text-anchor="middle" font-family="var(--font-mono)" font-size="7" fill="var(--copper)" font-style="italic">s/ aula</text>
+<rect x="615.1" y="150" width="2" height="40" fill="var(--surface)" />
+<circle cx="641.4" cy="170.0" r="10" fill="var(--surface)" opacity="0.94"/>
+<text x="641.4" y="173.5" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="var(--blueprint-deep)" font-weight="700">4</text>
+<line x1="60" y1="190" x2="970" y2="190" stroke="var(--ink-faint)" stroke-width="1"/>
+<line x1="60.0" y1="190" x2="60.0" y2="196" stroke="var(--ink-faint)" stroke-width="1"/>
+<line x1="110.6" y1="190" x2="110.6" y2="196" stroke="var(--ink-faint)" stroke-width="1"/>
+<line x1="161.1" y1="190" x2="161.1" y2="196" stroke="var(--ink-faint)" stroke-width="1"/>
+<line x1="211.7" y1="190" x2="211.7" y2="196" stroke="var(--ink-faint)" stroke-width="1"/>
+<line x1="262.2" y1="190" x2="262.2" y2="196" stroke="var(--ink-faint)" stroke-width="1"/>
+<line x1="312.8" y1="190" x2="312.8" y2="196" stroke="var(--ink-faint)" stroke-width="1"/>
+<line x1="363.3" y1="190" x2="363.3" y2="196" stroke="var(--ink-faint)" stroke-width="1"/>
+<line x1="413.9" y1="190" x2="413.9" y2="196" stroke="var(--ink-faint)" stroke-width="1"/>
+<line x1="464.4" y1="190" x2="464.4" y2="196" stroke="var(--ink-faint)" stroke-width="1"/>
+<line x1="515.0" y1="190" x2="515.0" y2="196" stroke="var(--ink-faint)" stroke-width="1"/>
+<line x1="565.6" y1="190" x2="565.6" y2="196" stroke="var(--ink-faint)" stroke-width="1"/>
+<line x1="616.1" y1="190" x2="616.1" y2="196" stroke="var(--ink-faint)" stroke-width="1"/>
+<line x1="666.7" y1="190" x2="666.7" y2="196" stroke="var(--ink-faint)" stroke-width="1"/>
+<line x1="717.2" y1="190" x2="717.2" y2="196" stroke="var(--ink-faint)" stroke-width="1"/>
+<line x1="767.8" y1="190" x2="767.8" y2="196" stroke="var(--ink-faint)" stroke-width="1"/>
+<line x1="818.3" y1="190" x2="818.3" y2="196" stroke="var(--ink-faint)" stroke-width="1"/>
+<line x1="868.9" y1="190" x2="868.9" y2="196" stroke="var(--ink-faint)" stroke-width="1"/>
+<line x1="919.4" y1="190" x2="919.4" y2="196" stroke="var(--ink-faint)" stroke-width="1"/>
+<line x1="970.0" y1="190" x2="970.0" y2="196" stroke="var(--ink-faint)" stroke-width="1"/>
+<text x="85.3" y="212" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--ink-soft)">1</text>
+<text x="135.8" y="212" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--ink-soft)">2</text>
+<text x="186.4" y="212" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--ink-soft)">3</text>
+<text x="236.9" y="212" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--ink-soft)">4</text>
+<text x="287.5" y="212" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--ink-soft)">5</text>
+<text x="338.1" y="212" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--ink-soft)">6</text>
+<text x="388.6" y="212" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--ink-soft)">7</text>
+<text x="439.2" y="212" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--ink-soft)">8</text>
+<text x="489.7" y="212" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--ink-soft)">9</text>
+<text x="540.3" y="212" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--ink-soft)">10</text>
+<text x="590.8" y="212" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--ink-soft)">11</text>
+<text x="641.4" y="212" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--ink-soft)">12</text>
+<text x="691.9" y="212" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--ink-soft)">13</text>
+<text x="742.5" y="212" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--ink-soft)">14</text>
+<text x="793.1" y="212" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--ink-soft)">15</text>
+<text x="843.6" y="212" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--ink-soft)">16</text>
+<text x="894.2" y="212" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--ink-soft)">17</text>
+<text x="944.7" y="212" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--ink-soft)">18</text>
+<text x="60" y="212" text-anchor="end" font-family="var(--font-mono)" font-size="9" fill="var(--ink-faint)" dx="-8">Sem.</text>
+<text x="110.6" y="236" text-anchor="middle" font-family="var(--font-mono)" font-size="8.5" font-weight="700" fill="var(--blueprint-deep)" letter-spacing="1">FASE 1</text>
+<text x="110.6" y="250" text-anchor="middle" font-family="var(--font-body)" font-size="11.5" font-weight="700" fill="var(--ink)">Concepção</text>
+<text x="110.6" y="264" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--ink-faint)">21/08–28/08</text>
+<text x="211.7" y="236" text-anchor="middle" font-family="var(--font-mono)" font-size="8.5" font-weight="700" fill="var(--blueprint-deep)" letter-spacing="1">FASE 2</text>
+<text x="211.7" y="250" text-anchor="middle" font-family="var(--font-body)" font-size="11.5" font-weight="700" fill="var(--ink)">Modelagem</text>
+<text x="211.7" y="264" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--ink-faint)">04/09–11/09</text>
+<text x="464.5" y="236" text-anchor="middle" font-family="var(--font-mono)" font-size="8.5" font-weight="700" fill="var(--blueprint-deep)" letter-spacing="1">FASE 3</text>
+<text x="464.5" y="250" text-anchor="middle" font-family="var(--font-body)" font-size="11.5" font-weight="700" fill="var(--ink)">Sprints de desenvolvimento</text>
+<text x="464.5" y="264" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--ink-faint)">18/09–30/10</text>
+<text x="742.6" y="236" text-anchor="middle" font-family="var(--font-mono)" font-size="8.5" font-weight="700" fill="var(--blueprint-deep)" letter-spacing="1">FASE 4</text>
+<text x="742.6" y="250" text-anchor="middle" font-family="var(--font-body)" font-size="11.5" font-weight="700" fill="var(--ink)">Fechamento</text>
+<text x="742.6" y="264" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--ink-faint)">06/11–20/11</text>
+<text x="894.2" y="236" text-anchor="middle" font-family="var(--font-mono)" font-size="8.5" font-weight="700" fill="var(--ink-faint)" letter-spacing="1">—</text>
+<text x="894.2" y="250" text-anchor="middle" font-family="var(--font-body)" font-size="11.5" font-weight="700" fill="var(--ink)">Encerramento</text>
+<text x="894.2" y="264" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--ink-faint)">27/11–11/12</text>
+</svg>
+      </div>
+      <figcaption class="fig-caption"><span class="fig-num">FIG. 1</span>As cinco fases do semestre (a partir da nova Semana 1, 21/08), com os marcos de entrega (E1–E10) na semana em que vencem. A Fase 3 tem hiatos nas semanas 6 (reposição assíncrona) e 11 (Semana de Tecnologia). Com o cancelamento da Feira presencial, a E10 passou para a semana 15 (20/11), com envio online do vídeo da Mostra Virtual.</figcaption>
+    </figure>
+
+    <h3>Fase 1 — Concepção <span style="font-family:var(--font-mono); font-size:12.5px; color:var(--ink-faint);">(semanas 1–2 · 21/08 a 28/08)</span></h3>
+    <div class="tablewrap">
+      <table class="spec">
+        <thead><tr><th style="width:7%">Sem.</th><th style="width:9%">Data</th><th>Aula 1</th><th>Aula 2</th><th>Você entrega</th></tr></thead>
+        <tbody>
+          <tr><td class="num">1</td><td class="mono">21/08</td><td>Elicitação de requisitos: entrevista, observação, análise de documentos</td><td>Contato com cliente / definição do problema</td><td><span class="badge">E1</span> Doc. de Visão + Escopo (Trilha A)</td></tr>
+          <tr><td class="num">2</td><td class="mono">28/08</td><td>Backlog: histórias de usuário, INVEST, critérios de aceite</td><td>Priorização (MoSCoW), definição de MVP</td><td><span class="badge">E2</span> Backlog + Termo de Aceite</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout callout--warn">
+      <span class="callout-label">Ponto de controle</span>
+      <p>Se sua equipe chega na Semana 2 sem escopo aprovado, ela não avança. Escopo inflado é o principal motivo de fracasso de equipes nesta disciplina — <strong>corte agressivamente agora</strong>, é o único momento em que cortar sai barato.</p>
+    </div>
+
+    <h3>Fase 2 — Modelagem e preparação <span style="font-family:var(--font-mono); font-size:12.5px; color:var(--ink-faint);">(semanas 3–4 · 04/09 a 11/09)</span></h3>
+    <div class="tablewrap">
+      <table class="spec">
+        <thead><tr><th style="width:7%">Sem.</th><th style="width:9%">Data</th><th>Aula 1</th><th>Aula 2</th><th>Você entrega</th></tr></thead>
+        <tbody>
+          <tr><td class="num">3</td><td class="mono">04/09</td><td>Modelagem: casos de uso, diagrama de classes, modelo de domínio</td><td>Modelagem de dados: DER → modelo lógico → DDL</td><td><span class="badge">E3</span> UML + DER + DDL</td></tr>
+          <tr><td class="num">4</td><td class="mono">11/09</td><td>Arquitetura em camadas, escolha de stack, padrões do projeto</td><td>Setup: repositório, branches, board, ambiente, protótipo</td><td><span class="badge">E4</span> Repo + protótipo + plano de testes</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:14.5px; color:var(--ink-soft);"><strong>Oficinas curtas nessa fase (20–30 min cada):</strong> Git com <em>pull request</em> e <em>code review</em>; convenções de commit; variáveis de ambiente e segredos.</p>
+
+    <h3>Fase 3 — Sprints de desenvolvimento <span style="font-family:var(--font-mono); font-size:12.5px; color:var(--ink-faint);">(semanas 5–12 · 18/09 a 30/10)</span></h3>
+    <p>Ritmo fixo em cada semana de sprint:</p>
+    <ul class="plain" style="display:flex; flex-direction:column; gap:8px; margin:12px 0 18px 0; font-size:15px;">
+      <li><strong>Aula 1 de cada semana</strong> — oficina temática (20–30min) + desenvolvimento acompanhado</li>
+      <li><strong>Aula 2 de cada semana</strong> — weekly de 10min/equipe: o que fizemos, o que faremos, impedimentos</li>
+      <li><strong>Última aula da sprint</strong> — Sprint Review (10min, com o software rodando) + retrospectiva escrita</li>
+    </ul>
+
+    <div class="callout callout--warn">
+      <span class="callout-label">Compressão do calendário</span>
+      <p>A Sprint 1 e a Sprint 4 ficam com <strong>1 semana só</strong>; as Sprints 2 e 3 têm 2 semanas cada — é a compressão necessária pra absorver a E1 movida para 21/08 e ainda assim fechar antes da Feira (Semana 14). As semanas 6 (reposição assíncrona, mesma data da Semana 5) e 11 (Semana de Tecnologia, sem aula) não são semanas de sprint: a sprint só continua na semana seguinte, sem deslocar prazo.</p>
+    </div>
+
+    <div class="tablewrap">
+      <table class="spec">
+        <thead><tr><th style="width:9%">Sprint</th><th style="width:8%">Sem.</th><th style="width:13%">Datas</th><th>Foco sugerido</th><th>Oficinas</th></tr></thead>
+        <tbody>
+          <tr><td class="num">1</td><td class="mono">5</td><td class="mono">18/09</td><td>Fundação: modelo de dados implementado, autenticação, CRUD principal</td><td>Migrations e seed; camada de acesso a dados</td></tr>
+          <tr><td>—</td><td class="mono">6</td><td class="mono">18/09</td><td colspan="2"><em>Reposição assíncrona</em> (mesma data da Semana 5 — sem conteúdo de sprint)</td></tr>
+          <tr><td class="num">2</td><td class="mono">7–8</td><td class="mono">25/09–02/10</td><td>Regra de negócio central + fluxos principais</td><td>Testes unitários; tratamento de erros e log</td></tr>
+          <tr><td class="num">3</td><td class="mono">9–10</td><td class="mono">09/10–16/10</td><td>Relatórios/dashboard, perfis de acesso, refinamentos</td><td>Testes de integração; CI com GitHub Actions</td></tr>
+          <tr><td>—</td><td class="mono">11</td><td class="mono">23/10</td><td colspan="2"><em>Semana de Tecnologia</em> — não haverá aula</td></tr>
+          <tr><td class="num">4</td><td class="mono">12</td><td class="mono">30/10</td><td>Requisitos não funcionais essenciais: segurança, LGPD, preparação de deploy</td><td>OWASP básico; deploy</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:14.5px; color:var(--ink-soft);"><strong>Ao fim de cada sprint (E5–E8) você entrega:</strong> incremento funcional demonstrável + backlog atualizado + evidências de teste + ata de retrospectiva + relatório individual de contribuição — <span class="badge">E5</span> sem.5 (18/09) · <span class="badge">E6</span> sem.8 (02/10) · <span class="badge">E7</span> sem.10 (16/10) · <span class="badge">E8</span> sem.12 (30/10).</p>
+
+    <h3>Fase 4 — Fechamento <span style="font-family:var(--font-mono); font-size:12.5px; color:var(--ink-faint);">(semanas 13–15 · 06/11 a 20/11)</span></h3>
+    <div class="tablewrap">
+      <table class="spec">
+        <thead><tr><th style="width:8%">Sem.</th><th style="width:9%">Data</th><th>Atividade</th><th>Você entrega</th></tr></thead>
+        <tbody>
+          <tr><td class="num">13</td><td class="mono">06/11</td><td>Congelamento de escopo, bateria de testes, correção de bugs, teste de aceitação com o cliente/PO</td><td><span class="badge">E9</span> Relatório de testes + termo de aceite</td></tr>
+          <tr><td class="num">14</td><td class="mono">13/11</td><td>Documentação final, README, manual do usuário, ficha da mostra; roteiro, gravação e edição do vídeo da Mostra Virtual (8–12 min). A Feira de Projetos presencial foi cancelada.</td><td>—</td></tr>
+          <tr><td class="num">15</td><td class="mono">20/11</td><td>Sem aula (Consciência Negra). Envio online até 23h59. Os vídeos compõem o site da <strong>Mostra Virtual de Projetos</strong>.</td><td><span class="badge">E10</span> Documentação + deploy estável + vídeo + ficha da mostra</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Encerramento do semestre <span style="font-family:var(--font-mono); font-size:12.5px; color:var(--ink-faint);">(semanas 16–18 · 27/11 a 11/12)</span></h3>
+    <p style="font-size:14.5px; color:var(--ink-soft);">Sem conteúdo didático nem entregas novas — compromissos institucionais fixos.</p>
+    <div class="tablewrap">
+      <table class="spec">
+        <thead><tr><th style="width:8%">Sem.</th><th style="width:12%">Data</th><th>Evento</th></tr></thead>
+        <tbody>
+          <tr><td class="num">16</td><td class="mono">27/11</td><td>Vista de Provas</td></tr>
+          <tr><td class="num">17</td><td class="mono">04/12</td><td>Substitutiva</td></tr>
+          <tr><td class="num">18</td><td class="mono">11/12</td><td>Procedimentos de finalização</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       PAPÉIS
+       ============================================================ -->
+  <section class="block" id="papeis">
+    <div class="sec-head"><span class="sec-tag">§5</span><h2>Papéis na equipe</h2></div>
+
+    <p>Os quatro papéis abaixo <strong>rotacionam a cada sprint</strong>, para que ninguém termine o semestre sabendo só uma coisa. Independente do papel do momento: todos programam, todos abrem PRs, e nenhum PR entra na branch principal sem revisão de outro integrante.</p>
+
+    <div class="role-grid">
+      <div class="role-card">
+        <span class="r-title">Facilitador / Scrum Master</span>
+        <span class="r-desc">Conduz os rituais, mantém o board atualizado, registra impedimentos da equipe.</span>
+      </div>
+      <div class="role-card">
+        <span class="r-title">Product Owner</span>
+        <span class="r-desc">Dono do backlog e do contato com o cliente.</span>
+        <span class="r-flag">Trilha A1: papel fixo, é o aluno do TCC</span>
+      </div>
+      <div class="role-card">
+        <span class="r-title">Responsável por dados</span>
+        <span class="r-desc">Modelo, migrations, integridade e desempenho de consultas.</span>
+      </div>
+      <div class="role-card">
+        <span class="r-title">Responsável por qualidade</span>
+        <span class="r-desc">Plano de testes, revisão de PRs, integração contínua.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       AVALIAÇÃO
+       ============================================================ -->
+  <section class="block" id="avaliacao">
+    <div class="sec-head"><span class="sec-tag">§6</span><h2>Como você é avaliado</h2></div>
+
+    <h3>Composição da nota do grupo</h3>
+    <figure class="figure">
+      <div class="figure-frame">
+        <svg viewBox="0 0 1000 350" role="img" aria-label="Grafico de barras horizontais mostrando a composicao da nota final: Sprints 30 por cento, Produto final 25 por cento, Entregas de processo 15 por cento, Documentacao final 10 por cento, Video da Mostra Virtual 10 por cento, Participacao individual 10 por cento" xmlns="http://www.w3.org/2000/svg">
+<line x1="330.0" y1="16" x2="330.0" y2="302" stroke="var(--line-blue)" stroke-width="1"/>
+<text x="330.0" y="318" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="var(--ink-faint)">0%</text>
+<line x1="480.0" y1="16" x2="480.0" y2="302" stroke="var(--line-blue)" stroke-width="1"/>
+<text x="480.0" y="318" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="var(--ink-faint)">10%</text>
+<line x1="630.0" y1="16" x2="630.0" y2="302" stroke="var(--line-blue)" stroke-width="1"/>
+<text x="630.0" y="318" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="var(--ink-faint)">20%</text>
+<line x1="780.0" y1="16" x2="780.0" y2="302" stroke="var(--line-blue)" stroke-width="1"/>
+<text x="780.0" y="318" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="var(--ink-faint)">30%</text>
+<line x1="930.0" y1="16" x2="930.0" y2="302" stroke="var(--line-blue)" stroke-width="1"/>
+<text x="930.0" y="318" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="var(--ink-faint)">40%</text>
+<text x="314" y="37.0" text-anchor="end" font-family="var(--font-body)" font-size="13.5" fill="var(--ink)">Sprints (E5–E8) — média das 4</text>
+<rect x="330" y="20" width="600.0" height="26" rx="4" fill="var(--blueprint-wash)"/>
+<rect x="330" y="20" width="450.0" height="26" rx="4" fill="var(--blueprint)"/>
+<text x="790.0" y="38.0" font-family="var(--font-mono)" font-size="14" font-weight="700" fill="var(--blueprint-deep)">30%</text>
+<text x="314" y="87.0" text-anchor="end" font-family="var(--font-body)" font-size="13.5" fill="var(--ink)">Produto final: funcionalidade e qualidade</text>
+<rect x="330" y="70" width="600.0" height="26" rx="4" fill="var(--blueprint-wash)"/>
+<rect x="330" y="70" width="375.0" height="26" rx="4" fill="var(--blueprint)"/>
+<text x="715.0" y="88.0" font-family="var(--font-mono)" font-size="14" font-weight="700" fill="var(--blueprint-deep)">25%</text>
+<text x="314" y="137.0" text-anchor="end" font-family="var(--font-body)" font-size="13.5" fill="var(--ink)">Entregas de processo (E1–E4)</text>
+<rect x="330" y="120" width="600.0" height="26" rx="4" fill="var(--blueprint-wash)"/>
+<rect x="330" y="120" width="225.0" height="26" rx="4" fill="var(--blueprint)"/>
+<text x="565.0" y="138.0" font-family="var(--font-mono)" font-size="14" font-weight="700" fill="var(--blueprint-deep)">15%</text>
+<text x="314" y="187.0" text-anchor="end" font-family="var(--font-body)" font-size="13.5" fill="var(--ink)">Documentação final (E10a/E10b)</text>
+<rect x="330" y="170" width="600.0" height="26" rx="4" fill="var(--blueprint-wash)"/>
+<rect x="330" y="170" width="150.0" height="26" rx="4" fill="var(--blueprint)"/>
+<text x="490.0" y="188.0" font-family="var(--font-mono)" font-size="14" font-weight="700" fill="var(--blueprint-deep)">10%</text>
+<text x="314" y="237.0" text-anchor="end" font-family="var(--font-body)" font-size="13.5" fill="var(--ink)">Vídeo da Mostra Virtual (E10c)</text>
+<rect x="330" y="220" width="600.0" height="26" rx="4" fill="var(--blueprint-wash)"/>
+<rect x="330" y="220" width="150.0" height="26" rx="4" fill="var(--blueprint)"/>
+<text x="490.0" y="238.0" font-family="var(--font-mono)" font-size="14" font-weight="700" fill="var(--blueprint-deep)">10%</text>
+<text x="314" y="287.0" text-anchor="end" font-family="var(--font-body)" font-size="13.5" fill="var(--ink)">Participação individual e rituais</text>
+<rect x="330" y="270" width="600.0" height="26" rx="4" fill="var(--blueprint-wash)"/>
+<rect x="330" y="270" width="150.0" height="26" rx="4" fill="var(--blueprint)"/>
+<text x="490.0" y="288.0" font-family="var(--font-mono)" font-size="14" font-weight="700" fill="var(--blueprint-deep)">10%</text>
+</svg>
+      </div>
+      <figcaption class="fig-caption"><span class="fig-num">FIG. 2</span>As sprints (E5–E8) seguem como o maior componente da nota. Com o cancelamento da Feira, o vídeo da Mostra Virtual ganhou peso próprio de 10%, retirado das sprints (que passaram de 40% para 30%).</figcaption>
+    </figure>
+
+    <h3>Sua nota individual não é igual à nota do grupo</h3>
+    <div class="formula">Nota final individual&nbsp; = &nbsp;<strong>nota do grupo</strong>&nbsp; × &nbsp;<strong>fator de contribuição (0,5 a 1,2)</strong></div>
+    <p>Isso significa que dois colegas do mesmo grupo podem sair do semestre com notas finais diferentes. O fator vem de três fontes cruzadas:</p>
+
+    <div class="tri-grid">
+      <div class="tri-card"><span class="tri-n">1</span><span class="tri-t">Evidência objetiva</span><span class="tri-d">Commits, PRs abertos, PRs revisados, issues fechadas.</span></div>
+      <div class="tri-card"><span class="tri-n">2</span><span class="tri-t">Avaliação por pares</span><span class="tri-d">Você distribui 100 pontos entre os colegas ao fim de cada sprint, com justificativa escrita.</span></div>
+      <div class="tri-card"><span class="tri-n">3</span><span class="tri-t">Observação do professor</span><span class="tri-d">Presença e participação nas weeklies e reviews.</span></div>
+    </div>
+
+    <div class="callout">
+      <p>Na prática: aparecer nos rituais, revisar o PR do colega e manter commits visíveis ao longo do semestre pesa tanto quanto o resultado final do produto. Contribuição silenciosa que não deixa rastro é difícil de defender nas três fontes acima.</p>
+    </div>
+
+    <h3>Rubrica do produto <span style="font-family:var(--font-mono); font-size:12.5px; color:var(--ink-faint);">(aplicada no fechamento, sobre o deploy e o vídeo da Mostra Virtual)</span></h3>
+    <div class="tablewrap">
+      <table class="spec">
+        <thead><tr><th>Critério</th><th>Insuficiente (0–4)</th><th>Adequado (5–7)</th><th>Excelente (8–10)</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Requisitos</strong></td><td>Vagos, sem critérios de aceite</td><td>Documentados e rastreáveis até o código</td><td>Rastreabilidade completa requisito → modelo → código → teste</td></tr>
+          <tr><td><strong>Modelagem de dados</strong></td><td>Sem normalização, sem FKs</td><td>Normalizado até 3FN, integridade garantida</td><td>Índices justificados, consultas otimizadas, migrations versionadas</td></tr>
+          <tr><td><strong>Código</strong></td><td>Monolítico, sem padrão, sem tratamento de erro</td><td>Camadas separadas, nomenclatura consistente</td><td>Padrões aplicados com justificativa, baixo acoplamento</td></tr>
+          <tr><td><strong>Testes</strong></td><td>Ausentes ou só manuais sem registro</td><td>Casos documentados e executados, testes unitários no núcleo</td><td>Testes automatizados em CI, cobertura da regra de negócio</td></tr>
+          <tr><td><strong>Processo</strong></td><td>Board desatualizado, commits em bloco no fim</td><td>Sprints cumpridas, board vivo, PRs revisados</td><td>Retrospectivas com ações efetivamente aplicadas</td></tr>
+          <tr><td><strong>Produto</strong></td><td>Não roda / não implantado</td><td>Implantado, MVP funcional</td><td>Estável, usável, com feedback de usuário real incorporado</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       REGRAS
+       ============================================================ -->
+  <section class="block" id="regras">
+    <div class="sec-head"><span class="sec-tag">§7</span><h2>Regras do jogo</h2></div>
+
+    <div class="callout">
+      <span class="callout-label">Uso de IA generativa</span>
+      <p>Permitido e incentivado, com duas condições: <strong>(a)</strong> todo PR em que a IA ajudou de forma substancial declara isso na descrição; <strong>(b)</strong> em qualquer momento o professor pode te pedir para explicar linha a linha o código que você submeteu. Não saber explicar o próprio código equivale a não tê-lo entregue.</p>
+    </div>
+
+    <div class="callout callout--warn">
+      <span class="callout-label">Se você sumir</span>
+      <p>Depois de duas sprints sem contribuição registrada, você é formalmente notificado e a equipe pode pedir redistribuição do seu escopo. Isso é documentado por e-mail — não é uma conversa informal.</p>
+    </div>
+
+    <div class="callout">
+      <span class="callout-label">Redução de escopo</span>
+      <p>Negociada com o professor até a <strong>Semana 11</strong>, não penaliza. Abandonar uma funcionalidade em silêncio, sem avisar, penaliza. Se algo não vai sair, fale antes de sumir com ela.</p>
+    </div>
+
+    <div class="callout">
+      <span class="callout-label">Duplicidade com o TCC (Trilha A)</span>
+      <p>A Declaração de Escopo Compartilhado existe para te proteger: ela deixa claro, por escrito, o que é TCC e o que é Laboratório — evitando que a mesma entrega seja questionada duas vezes.</p>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       TEMAS
+       ============================================================ -->
+  <section class="block" id="temas">
+    <div class="sec-head"><span class="sec-tag">§8</span><h2>Banco de temas — Trilha B</h2></div>
+
+    <p>Todos os temas abaixo cobrem os requisitos mínimos do <a href="#requisitos">§3</a>. <strong>Escolha um e recorte-o</strong> — não tente abraçar o tema inteiro. O recorte é, em si, um exercício de engenharia.</p>
+
+    <div class="card-grid">
+      <div class="theme-card"><span class="t-num">01</span><span class="t-title">Gestão de laboratórios da Fatec</span><span class="t-desc">Reserva de salas/equipamentos com detecção de conflito de horário e relatório de ocupação.</span></div>
+      <div class="theme-card"><span class="t-num">02</span><span class="t-title">Controle de estágios</span><span class="t-desc">Cadastro de convênios, vagas, encaminhamentos e acompanhamento com alertas de vencimento.</span></div>
+      <div class="theme-card"><span class="t-num">03</span><span class="t-title">Clínica veterinária de bairro</span><span class="t-desc">Prontuário, agenda, vacinas com lembrete automático.</span></div>
+      <div class="theme-card"><span class="t-num">04</span><span class="t-title">Gestão de ONG de doações</span><span class="t-desc">Estoque de itens, doadores, famílias atendidas, relatório de distribuição.</span></div>
+      <div class="theme-card"><span class="t-num">05</span><span class="t-title">Plataforma de monitoria acadêmica</span><span class="t-desc">Matching entre monitor e aluno por disciplina e disponibilidade.</span></div>
+      <div class="theme-card"><span class="t-num">06</span><span class="t-title">Controle de manutenção predial</span><span class="t-desc">Chamados, priorização, atribuição a técnicos, SLA e indicadores.</span></div>
+      <div class="theme-card"><span class="t-num">07</span><span class="t-title">Gestão de eventos acadêmicos</span><span class="t-desc">Inscrições, credenciamento com QR Code, certificados, lista de presença.</span></div>
+      <div class="theme-card"><span class="t-num">08</span><span class="t-title">Pequena oficina mecânica</span><span class="t-desc">Ordens de serviço, peças, histórico por veículo, orçamento.</span></div>
+      <div class="theme-card"><span class="t-num">09</span><span class="t-title">Controle de biblioteca comunitária</span><span class="t-desc">Acervo, empréstimos, reservas, multas, sugestão por histórico.</span></div>
+      <div class="theme-card"><span class="t-num">10</span><span class="t-title">Gestão de horta/produção familiar</span><span class="t-desc">Ciclos de plantio, colheita, custos, margem por cultura.</span></div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       ENTREGAS
+       ============================================================ -->
+  <section class="block" id="entregas">
+    <div class="sec-head"><span class="sec-tag">§9</span><h2>Checklist de entregas</h2></div>
+    <p>A folha de cola do semestre — cada código, o que é e em que semana vence.</p>
+
+    <div class="callout callout--warn">
+      <span class="callout-label">RA obrigatório em toda entrega</span>
+      <p>Em <strong>todas</strong> as entregas (E1–E10, individuais ou em equipe), identifique nome completo <strong>e RA</strong> de cada integrante — não só o nome. Entrega sem RA é considerada incompleta.</p>
+    </div>
+
+    <div class="tablewrap">
+      <table class="spec">
+        <thead><tr><th style="width:12%">Código</th><th>Entrega</th><th style="width:12%">Semana</th><th style="width:12%">Data</th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge">E1</span></td><td>Documento de Visão + Declaração de Escopo Compartilhado</td><td class="num">1</td><td class="mono">21/08</td></tr>
+          <tr><td><span class="badge">E2</span></td><td>Backlog priorizado + Termo de Aceite do Projeto</td><td class="num">2</td><td class="mono">28/08</td></tr>
+          <tr><td><span class="badge">E3</span></td><td>Diagramas UML + DER + script DDL</td><td class="num">3</td><td class="mono">04/09</td></tr>
+          <tr><td><span class="badge">E4</span></td><td>Repositório configurado + protótipo + plano de testes</td><td class="num">4</td><td class="mono">11/09</td></tr>
+          <tr><td><span class="badge">E5</span></td><td>Sprint 1 — fundação</td><td class="num">5</td><td class="mono">18/09</td></tr>
+          <tr><td><span class="badge">E6</span></td><td>Sprint 2 — regra de negócio</td><td class="num">8</td><td class="mono">02/10</td></tr>
+          <tr><td><span class="badge">E7</span></td><td>Sprint 3 — relatórios e perfis</td><td class="num">10</td><td class="mono">16/10</td></tr>
+          <tr><td><span class="badge">E8</span></td><td>Sprint 4 — requisitos não funcionais</td><td class="num">12</td><td class="mono">30/10</td></tr>
+          <tr><td><span class="badge">E9</span></td><td>Relatório de testes + termo de aceite</td><td class="num">13</td><td class="mono">06/11</td></tr>
+          <tr><td><span class="badge">E10</span></td><td>Documentação final + deploy estável + vídeo + ficha da mostra</td><td class="num">15</td><td class="mono">20/11</td></tr>
+          <tr><td>—</td><td><strong>Mostra Virtual de Projetos</strong> (site com os vídeos; substitui a Feira presencial)</td><td class="num">—</td><td class="mono">após 20/11</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       DICAS
+       ============================================================ -->
+  <section class="block" id="dicas">
+    <div class="sec-head"><span class="sec-tag">§10</span><h2>Erros que mais derrubam grupos</h2></div>
+    <p>Cinco padrões que se repetem semestre após semestre. Se você reconhecer o sinal de alerta no seu grupo, aja antes que vire risco de nota.</p>
+
+    <div class="tip-list">
+      <div class="tip">
+        <div>
+          <span class="tip-title">Escopo inflado</span>
+          <span class="tip-signal">Sinal: backlog com 40 histórias ainda na Semana 2</span>
+          <span class="tip-body">Corte agora, no Termo de Aceite — é o único momento em que cortar escopo é barato. Depois disso, cada corte custa retrabalho.</span>
+        </div>
+      </div>
+      <div class="tip">
+        <div>
+          <span class="tip-title">Equipe travada escolhendo stack</span>
+          <span class="tip-signal">Sinal: Sprint 1 termina sem nenhum incremento rodando</span>
+          <span class="tip-body">Use uma stack que o grupo já conhece. A disciplina não avalia se você aprendeu um framework novo — avalia o processo em cima do que você já sabe fazer.</span>
+        </div>
+      </div>
+      <div class="tip">
+        <div>
+          <span class="tip-title">Sobrecarga do aluno de TCC</span>
+          <span class="tip-signal">Sinal: sumir das weeklies a partir da Semana 9</span>
+          <span class="tip-body">Renegocie o escopo do Laboratório com o professor — não o do TCC. São entregas separadas por design; não precisa sacrificar uma pela outra.</span>
+        </div>
+      </div>
+      <div class="tip">
+        <div>
+          <span class="tip-title">"Vamos integrar tudo na última semana"</span>
+          <span class="tip-signal">Sinal: branches abertas há semanas sem merge</span>
+          <span class="tip-body">Faça merge na branch principal pelo menos uma vez por semana. Integração de última hora é a forma mais comum de uma equipe perder uma Sprint Review inteira.</span>
+        </div>
+      </div>
+      <div class="tip">
+        <div>
+          <span class="tip-title">Cliente real some</span>
+          <span class="tip-signal">Sinal: sem retorno do cliente há 3 semanas</span>
+          <span class="tip-body">Avise o professor — ele assume o papel de cliente nesse caso. Combine isso com a equipe desde o início, para não travar o backlog esperando resposta.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>Manual do Aluno · Laboratório de Engenharia de Software · ADS · Fatec Ribeirão Preto · Em caso de dúvida, o professor é a fonte oficial.</p>
+  </footer>
+
+</main>
+
+</body>
+</html>
