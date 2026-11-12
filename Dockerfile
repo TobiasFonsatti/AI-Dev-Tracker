@@ -14,6 +14,7 @@ ENV NEXT_PUBLIC_SUPABASE_URL=$NEXT_PUBLIC_SUPABASE_URL
 ENV NEXT_PUBLIC_SUPABASE_ANON_KEY=$NEXT_PUBLIC_SUPABASE_ANON_KEY
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+RUN npx prisma generate
 # Valor só para o build; a conexão real vem do ambiente em runtime.
 RUN DATABASE_URL="postgresql://build:build@localhost:5432/build" npm run build
 
