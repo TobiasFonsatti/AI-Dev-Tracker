@@ -14,19 +14,28 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Rastreador de Uso de IA no Desenvolvimento",
-  description: "Laboratório de Engenharia de Software — ADS Fatec Ribeirão Preto",
+  title: "AI Dev Tracker — Monitoramento do Uso de IA no Desenvolvimento",
+  description: "Plataforma analítica para acompanhamento da experiência do desenvolvedor e adoção de IA. Laboratório de Engenharia de Software — ADS Fatec Ribeirão Preto.",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
     <html
       lang="pt-BR"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-full flex flex-col bg-slate-50 text-slate-900 selection:bg-indigo-500 selection:text-white">
         <NavBar />
-        {children}
+        <div className="flex-1 flex flex-col">{children}</div>
+        <footer className="border-t border-slate-200/80 bg-white/70 py-6 text-center text-xs text-slate-500">
+          <p>
+            AI Dev Tracker · Laboratório de Engenharia de Software · ADS Fatec Ribeirão Preto
+          </p>
+        </footer>
       </body>
     </html>
   );
