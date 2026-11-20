@@ -1,7 +1,7 @@
 # Roteiro do Vídeo — AI-Dev-Tracker (Mostra Virtual)
 
 **Equipe:** Artur Feiteiro Ruiz (RA 2840482421032) — Tobias Gomide Fonsatti (RA 2840482421046)  
-**Link do vídeo (não listado):** [Adicionar URL do YouTube após a gravação]  
+**Link do vídeo (não listado):** [https://youtu.be/zSEzHEvfKnw](https://youtu.be/zSEzHEvfKnw)  
 **Duração planejada:** ~10:00 (mínimo 8:00, máximo 12:00)  
 **Deploy utilizado na gravação:** [https://aidevtracker.tobiasfonsatti.com.br/](https://aidevtracker.tobiasfonsatti.com.br/)
 

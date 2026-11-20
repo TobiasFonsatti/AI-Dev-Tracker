@@ -17,7 +17,7 @@
 
 ## Links
 
-- **Vídeo (Demonstração e Engenharia Ágil):** [Adicionar link do YouTube não listado após a gravação]
+- **Vídeo (Demonstração e Engenharia Ágil):** [https://youtu.be/zSEzHEvfKnw](https://youtu.be/zSEzHEvfKnw)
 - **Deploy público:** [https://aidevtracker.tobiasfonsatti.com.br/](https://aidevtracker.tobiasfonsatti.com.br/)
 - **Repositório:** [https://github.com/TobiasFonsatti/AI-Dev-Tracker](https://github.com/TobiasFonsatti/AI-Dev-Tracker)
 
