@@ -114,3 +114,54 @@ export async function alternarStatusFerramenta(formData: FormData) {
 
   revalidatePath("/admin/ferramentas-ia");
 }
+
+
+export async function excluirItem(formData: FormData) {
+  const { getUsuarioAtual } = await import("@/lib/usuario-atual");
+  const usuario = await getUsuarioAtual();
+  if (!usuario) throw new Error("Não autenticado");
+
+  const modelo = String(formData.get("modelo"));
+  const id = Number(formData.get("id"));
+  if (!modelo || !id) return;
+
+  const isAdmin = usuario.perfil?.nome === "ADMINISTRADOR";
+
+  if (modelo === "usuario") {
+    if (!isAdmin) throw new Error("Sem permissão");
+    await prisma.usuario.delete({ where: { idUsuario: id } });
+    revalidatePath("/admin/usuarios");
+    return;
+  }
+
+  if (modelo === "projeto") {
+    const projeto = await prisma.projeto.findUnique({
+      where: { idProjeto: id },
+      include: { usuarioProjetos: { where: { idUsuario: usuario.idUsuario } } },
+    });
+    if (!projeto) return;
+    const isMember = projeto.usuarioProjetos.length > 0;
+    if (!isAdmin && !isMember) throw new Error("Sem permissão");
+    await prisma.projeto.delete({ where: { idProjeto: id } });
+    revalidatePath("/projetos");
+    return;
+  }
+
+  if (modelo === "sessao") {
+    const sessao = await prisma.sessaoDeTrabalho.findUnique({ where: { idSessao: id } });
+    if (!sessao) return;
+    if (!isAdmin && sessao.idUsuario !== usuario.idUsuario) throw new Error("Sem permissão");
+    await prisma.sessaoDeTrabalho.delete({ where: { idSessao: id } });
+    revalidatePath("/sessoes");
+    return;
+  }
+
+  if (modelo === "tarefa") {
+    const tarefa = await prisma.tarefa.findUnique({ where: { idTarefa: id } });
+    if (!tarefa) return;
+    if (!isAdmin && tarefa.idUsuario !== usuario.idUsuario) throw new Error("Sem permissão");
+    await prisma.tarefa.delete({ where: { idTarefa: id } });
+    revalidatePath("/tarefas");
+    return;
+  }
+}
