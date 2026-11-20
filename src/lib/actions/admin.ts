@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { exigirAdmin } from "@/lib/usuario-atual";
-import { STATUS_USUARIO } from "@/lib/validacoes";
+import { logAcao } from "@/lib/actions/log";
 
 export async function alternarStatusUsuario(formData: FormData) {
   await exigirAdmin();
@@ -15,6 +15,14 @@ export async function alternarStatusUsuario(formData: FormData) {
   await prisma.usuario.update({
     where: { idUsuario },
     data: { status: novoStatus },
+  });
+
+  // Audit log
+  await logAcao({
+    acao: "ALTERAR_STATUS",
+    tabela: "Usuario",
+    registroId: String(idUsuario),
+    novoValor: { status: novoStatus },
   });
 
   revalidatePath("/admin/usuarios");

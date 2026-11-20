@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { exigirAdmin } from "@/lib/usuario-atual";
-import { alternarStatusUsuario, alterarPerfilUsuario } from "@/lib/actions/admin";
+import DeleteButton from "@/components/DeleteButton";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import { UsersIcon } from "@/components/icons";
 
 export default async function AdminUsuariosPage() {
