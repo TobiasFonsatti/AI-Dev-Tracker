@@ -2,17 +2,8 @@ import Link from "next/link";
 import { getUsuarioAtual } from "@/lib/usuario-atual";
 import { sair } from "@/lib/actions/auth";
 import ThemeToggle from "@/components/ThemeToggle";
-import {
-  SparklesIcon,
-  FolderIcon,
-  PlusCircleIcon,
-  HistoryIcon,
-  LayoutDashboardIcon,
-  UsersIcon,
-  ShieldCheckIcon,
-  BotIcon,
-  LogOutIcon,
-} from "@/components/icons";
+import NavLinks from "@/components/NavLinks";
+import { SparklesIcon, LogOutIcon } from "@/components/icons";
 
 export default async function NavBar() {
   const usuario = await getUsuarioAtual();
@@ -35,70 +26,7 @@ export default async function NavBar() {
             </div>
           </Link>
 
-          {usuario && (
-            <nav className="flex items-center gap-1 sm:gap-2 text-sm font-medium">
-              <Link
-                href="/projetos"
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-              >
-                <FolderIcon className="w-4 h-4 text-slate-400 dark:text-slate-500" />
-                <span className="hidden sm:inline">Projetos</span>
-              </Link>
-              <Link
-                href="/sessoes/nova"
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-              >
-                <PlusCircleIcon className="w-4 h-4 text-slate-400 dark:text-slate-500" />
-                <span>Nova Sessão</span>
-              </Link>
-              <Link
-                href="/historico"
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-              >
-                <HistoryIcon className="w-4 h-4 text-slate-400 dark:text-slate-500" />
-                <span className="hidden md:inline">Histórico</span>
-              </Link>
-
-              {(usuario.perfil.nome === "GESTOR" || usuario.perfil.nome === "ADMINISTRADOR") && (
-                <Link
-                  href="/dashboard"
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-indigo-700 bg-indigo-50/80 hover:bg-indigo-100/80 dark:bg-indigo-950/60 dark:text-indigo-300 dark:hover:bg-indigo-900/60 font-semibold transition-colors"
-                >
-                  <LayoutDashboardIcon className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
-                  <span>Dashboard</span>
-                </Link>
-              )}
-
-              {usuario.perfil.nome === "ADMINISTRADOR" && (
-                <div className="flex items-center gap-1 pl-2 border-l border-slate-200 dark:border-slate-800">
-                  <Link
-                    href="/admin/usuarios"
-                    className="flex items-center gap-1 px-2 py-1 rounded-md text-xs text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-                    title="Gestão de Usuários"
-                  >
-                    <UsersIcon className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
-                    <span className="hidden xl:inline">Usuários</span>
-                  </Link>
-                  <Link
-                    href="/admin/permissoes"
-                    className="flex items-center gap-1 px-2 py-1 rounded-md text-xs text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-                    title="Controle de Permissões"
-                  >
-                    <ShieldCheckIcon className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
-                    <span className="hidden xl:inline">Permissões</span>
-                  </Link>
-                  <Link
-                    href="/admin/ferramentas-ia"
-                    className="flex items-center gap-1 px-2 py-1 rounded-md text-xs text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-                    title="Catálogo de Ferramentas de IA"
-                  >
-                    <BotIcon className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
-                    <span className="hidden xl:inline">Ferramentas</span>
-                  </Link>
-                </div>
-              )}
-            </nav>
-          )}
+          {usuario && <NavLinks perfilNome={usuario.perfil.nome} />}
         </div>
 
         <div className="flex items-center gap-3 text-sm">
