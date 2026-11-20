@@ -3,6 +3,7 @@ import { exigirAdmin } from "@/lib/usuario-atual";
 import DeleteButton from "@/components/DeleteButton";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import { UsersIcon } from "@/components/icons";
+import { alternarStatusUsuario, alterarPerfilUsuario } from "@/lib/actions/admin";
 
 export default async function AdminUsuariosPage() {
   await exigirAdmin();
@@ -54,8 +55,7 @@ export default async function AdminUsuariosPage() {
                       <span className={`inline-block px-2 py-0.5 rounded text-[11px] font-bold ${u.perfil.nome === "ADMINISTRADOR" ? "bg-purple-100 text-purple-700" : u.perfil.nome === "GESTOR" ? "bg-blue-100 text-blue-700" : "bg-emerald-100 text-emerald-700"}`}>{u.perfil.nome}</span>
                     </td>
                     <td className="py-3.5 px-4">
-                      <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold ${isAtivo ? "bg-emerald-50 text-emerald-700 border border-emerald-200/60" : "bg-slate-100 text-slate-500 border border-slate-200"}`}
-                      >
+                      <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold ${isAtivo ? "bg-emerald-50 text-emerald-700 border border-emerald-200/60" : "bg-slate-100 text-slate-500 border border-slate-200"}`}>
                         <span className={`w-1.5 h-1.5 rounded-full ${isAtivo ? "bg-emerald-500" : "bg-slate-400"}`} />
                         {u.status}
                       </span>

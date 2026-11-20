@@ -28,8 +28,8 @@ model Perfil {
   nome      String  @unique @db.VarChar(30)
   descricao String? @db.VarChar(255)
 
-  usuarios           Usuario[]
-  perfilPermissoes   PerfilPermissao[]
+  usuarios         Usuario[]
+  perfilPermissoes PerfilPermissao[]
 
   @@map("perfil")
 }
@@ -64,11 +64,11 @@ model Usuario {
   status       String   @default("ATIVO") @db.VarChar(20)
   dataCadastro DateTime @default(now()) @map("data_cadastro")
 
-  perfil               Perfil                @relation(fields: [idPerfil], references: [idPerfil])
-  usuarioProjetos      UsuarioProjeto[]
-  usuarioTarefas       UsuarioTarefa[]
-  sessoes              SessaoDesenvolvimento[]
-  situacoesAtencao     SituacaoAtencao[]
+  perfil           Perfil                  @relation(fields: [idPerfil], references: [idPerfil])
+  usuarioProjetos  UsuarioProjeto[]
+  usuarioTarefas   UsuarioTarefa[]
+  sessoes          SessaoDesenvolvimento[]
+  situacoesAtencao SituacaoAtencao[]
 
   @@map("usuario")
 }
@@ -88,10 +88,10 @@ model Projeto {
 }
 
 model UsuarioProjeto {
-  idUsuario       Int      @map("id_usuario")
-  idProjeto       Int      @map("id_projeto")
-  papelNoProjeto  String   @map("papel_no_projeto") @db.VarChar(30)
-  dataEntrada     DateTime @default(now()) @map("data_entrada")
+  idUsuario      Int      @map("id_usuario")
+  idProjeto      Int      @map("id_projeto")
+  papelNoProjeto String   @map("papel_no_projeto") @db.VarChar(30)
+  dataEntrada    DateTime @default(now()) @map("data_entrada")
 
   usuario Usuario @relation(fields: [idUsuario], references: [idUsuario])
   projeto Projeto @relation(fields: [idProjeto], references: [idProjeto])
@@ -101,12 +101,12 @@ model UsuarioProjeto {
 }
 
 model Tarefa {
-  idTarefa   Int      @id @default(autoincrement()) @map("id_tarefa")
-  idProjeto  Int      @map("id_projeto")
-  titulo     String   @db.VarChar(180)
+  idTarefa   Int       @id @default(autoincrement()) @map("id_tarefa")
+  idProjeto  Int       @map("id_projeto")
+  titulo     String    @db.VarChar(180)
   descricao  String?
-  status     String   @default("PENDENTE") @db.VarChar(20)
-  prioridade String   @default("MEDIA") @db.VarChar(20)
+  status     String    @default("PENDENTE") @db.VarChar(20)
+  prioridade String    @default("MEDIA") @db.VarChar(20)
   prazo      DateTime? @db.Date
 
   projeto        Projeto                 @relation(fields: [idProjeto], references: [idProjeto])
@@ -173,15 +173,15 @@ model SessaoFerramenta {
 }
 
 model AvaliacaoSessao {
-  idAvaliacao        Int     @id @default(autoincrement()) @map("id_avaliacao")
-  idSessao           Int     @unique @map("id_sessao")
-  produtividade      Int     @db.SmallInt
-  dificuldade        Int     @db.SmallInt
-  confianca          Int     @db.SmallInt
-  foco               Int     @db.SmallInt
-  fluidez            Int     @db.SmallInt
-  qualidadeFeedback  Int     @map("qualidade_feedback") @db.SmallInt
-  observacoes        String?
+  idAvaliacao       Int     @id @default(autoincrement()) @map("id_avaliacao")
+  idSessao          Int     @unique @map("id_sessao")
+  produtividade     Int     @db.SmallInt
+  dificuldade       Int     @db.SmallInt
+  confianca         Int     @db.SmallInt
+  foco              Int     @db.SmallInt
+  fluidez           Int     @db.SmallInt
+  qualidadeFeedback Int     @map("qualidade_feedback") @db.SmallInt
+  observacoes       String?
 
   sessao SessaoDesenvolvimento @relation(fields: [idSessao], references: [idSessao])
 
@@ -189,13 +189,13 @@ model AvaliacaoSessao {
 }
 
 model SituacaoAtencao {
-  idSituacao         Int      @id @default(autoincrement()) @map("id_situacao")
-  idSessao           Int      @map("id_sessao")
-  idUsuario          Int      @map("id_usuario")
-  motivo             String   @db.VarChar(255)
-  dataIdentificacao  DateTime @map("data_identificacao") @db.Date
-  acompanhada        Boolean  @default(false)
-  observacoes        String?
+  idSituacao        Int      @id @default(autoincrement()) @map("id_situacao")
+  idSessao          Int      @map("id_sessao")
+  idUsuario         Int      @map("id_usuario")
+  motivo            String   @db.VarChar(255)
+  dataIdentificacao DateTime @map("data_identificacao") @db.Date
+  acompanhada       Boolean  @default(false)
+  observacoes       String?
 
   sessao  SessaoDesenvolvimento @relation(fields: [idSessao], references: [idSessao])
   usuario Usuario               @relation(fields: [idUsuario], references: [idUsuario])

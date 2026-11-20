@@ -2,22 +2,23 @@
 
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
-import { exigirAdmin } from "@/lib/usuario-atual";
+import { exigirAdmin, getUsuarioAtual } from "@/lib/usuario-atual";
 import { logAcao } from "@/lib/actions/log";
+
+const STATUS_USUARIO_VALIDOS = ["ATIVO", "INATIVO"];
 
 export async function alternarStatusUsuario(formData: FormData) {
   await exigirAdmin();
 
   const idUsuario = Number(formData.get("idUsuario"));
   const novoStatus = String(formData.get("novoStatus"));
-  if (!STATUS_USUARIO.includes(novoStatus)) return;
+  if (!STATUS_USUARIO_VALIDOS.includes(novoStatus)) return;
 
   await prisma.usuario.update({
     where: { idUsuario },
     data: { status: novoStatus },
   });
 
-  // Audit log
   await logAcao({
     acao: "ALTERAR_STATUS",
     tabela: "Usuario",
@@ -27,7 +28,7 @@ export async function alternarStatusUsuario(formData: FormData) {
 
   revalidatePath("/admin/usuarios");
 }
-// New action to change user profile (role) by admin
+
 export async function alterarPerfilUsuario(formData: FormData) {
   await exigirAdmin();
 
@@ -35,14 +36,12 @@ export async function alterarPerfilUsuario(formData: FormData) {
   const idPerfil = Number(formData.get("idPerfil"));
   if (!idUsuario || !idPerfil) return;
 
-  // Fetch target user with current profile
   const target = await prisma.usuario.findUnique({
     where: { idUsuario },
     include: { perfil: true },
   });
   if (!target) return;
 
-  // Prevent changing other admins or elevating to admin
   if (target.perfil.nome === "ADMINISTRADOR") return;
 
   const newPerfil = await prisma.perfil.findUnique({ where: { idPerfil } });
@@ -51,12 +50,11 @@ export async function alterarPerfilUsuario(formData: FormData) {
 
   await prisma.usuario.update({
     where: { idUsuario },
-    data: { perfilId: idPerfil },
+    data: { idPerfil },
   });
 
   revalidatePath("/admin/usuarios");
 }
-
 
 export async function associarPermissao(formData: FormData) {
   await exigirAdmin();
@@ -115,9 +113,7 @@ export async function alternarStatusFerramenta(formData: FormData) {
   revalidatePath("/admin/ferramentas-ia");
 }
 
-
 export async function excluirItem(formData: FormData) {
-  const { getUsuarioAtual } = await import("@/lib/usuario-atual");
   const usuario = await getUsuarioAtual();
   if (!usuario) throw new Error("Não autenticado");
 
@@ -148,18 +144,23 @@ export async function excluirItem(formData: FormData) {
   }
 
   if (modelo === "sessao") {
-    const sessao = await prisma.sessaoDeTrabalho.findUnique({ where: { idSessao: id } });
+    const sessao = await prisma.sessaoDesenvolvimento.findUnique({
+      where: { idSessao: id },
+    });
     if (!sessao) return;
-    if (!isAdmin && sessao.idUsuario !== usuario.idUsuario) throw new Error("Sem permissão");
-    await prisma.sessaoDeTrabalho.delete({ where: { idSessao: id } });
+    if (!isAdmin && sessao.idUsuario !== usuario.idUsuario)
+      throw new Error("Sem permissão");
+    await prisma.sessaoDesenvolvimento.delete({ where: { idSessao: id } });
     revalidatePath("/sessoes");
     return;
   }
 
   if (modelo === "tarefa") {
-    const tarefa = await prisma.tarefa.findUnique({ where: { idTarefa: id } });
-    if (!tarefa) return;
-    if (!isAdmin && tarefa.idUsuario !== usuario.idUsuario) throw new Error("Sem permissão");
+    // Tarefa não possui idUsuario diretamente — verificamos via UsuarioTarefa
+    const vinculo = await prisma.usuarioTarefa.findFirst({
+      where: { idTarefa: id, idUsuario: usuario.idUsuario },
+    });
+    if (!isAdmin && !vinculo) throw new Error("Sem permissão");
     await prisma.tarefa.delete({ where: { idTarefa: id } });
     revalidatePath("/tarefas");
     return;
