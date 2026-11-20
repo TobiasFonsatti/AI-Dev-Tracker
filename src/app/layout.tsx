@@ -26,12 +26,32 @@ export default function RootLayout({
   return (
     <html
       lang="pt-BR"
+      suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-slate-50 text-slate-900 selection:bg-indigo-500 selection:text-white">
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var stored = localStorage.getItem('theme');
+                  var systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                  if (stored === 'dark' || (!stored && systemDark)) {
+                    document.documentElement.classList.add('dark');
+                  } else {
+                    document.documentElement.classList.remove('dark');
+                  }
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
+      </head>
+      <body className="min-h-full flex flex-col bg-slate-50 text-slate-900 transition-colors selection:bg-indigo-500 selection:text-white dark:bg-[#090d16] dark:text-slate-100">
         <NavBar />
         <div className="flex-1 flex flex-col">{children}</div>
-        <footer className="border-t border-slate-200/80 bg-white/70 py-6 text-center text-xs text-slate-500">
+        <footer className="border-t border-slate-200/80 bg-white/70 py-6 text-center text-xs text-slate-500 dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-400">
           <p>
             AI Dev Tracker · Laboratório de Engenharia de Software · ADS Fatec Ribeirão Preto
           </p>
