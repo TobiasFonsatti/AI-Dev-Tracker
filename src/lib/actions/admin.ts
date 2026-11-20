@@ -117,17 +117,35 @@ export async function excluirItem(formData: FormData) {
   const usuario = await getUsuarioAtual();
   if (!usuario) throw new Error("Não autenticado");
 
-  const modelo = String(formData.get("modelo"));
+  const modelo = String(formData.get("modelo") ?? "");
   const id = Number(formData.get("id"));
-  if (!modelo || !id) return;
+  if (!modelo || !Number.isInteger(id) || id <= 0) {
+    return { success: false as const, message: "Registro inválido." };
+  }
 
   const isAdmin = usuario.perfil?.nome === "ADMINISTRADOR";
 
   if (modelo === "usuario") {
     if (!isAdmin) throw new Error("Sem permissão");
-    await prisma.usuario.delete({ where: { idUsuario: id } });
+    const sessoes = await prisma.sessaoDesenvolvimento.findMany({
+      where: { idUsuario: id },
+      select: { idSessao: true },
+    });
+    const sessaoIds = sessoes.map((sessao: { idSessao: number }) => sessao.idSessao);
+
+    await prisma.$transaction([
+      prisma.sessaoFerramenta.deleteMany({ where: { idSessao: { in: sessaoIds } } }),
+      prisma.avaliacaoSessao.deleteMany({ where: { idSessao: { in: sessaoIds } } }),
+      prisma.situacaoAtencao.deleteMany({
+        where: { OR: [{ idUsuario: id }, { idSessao: { in: sessaoIds } }] },
+      }),
+      prisma.sessaoDesenvolvimento.deleteMany({ where: { idSessao: { in: sessaoIds } } }),
+      prisma.usuarioTarefa.deleteMany({ where: { idUsuario: id } }),
+      prisma.usuarioProjeto.deleteMany({ where: { idUsuario: id } }),
+      prisma.usuario.delete({ where: { idUsuario: id } }),
+    ]);
     revalidatePath("/admin/usuarios");
-    return;
+    return { success: true as const };
   }
 
   if (modelo === "projeto") {
@@ -135,24 +153,53 @@ export async function excluirItem(formData: FormData) {
       where: { idProjeto: id },
       include: { usuarioProjetos: { where: { idUsuario: usuario.idUsuario } } },
     });
-    if (!projeto) return;
+    if (!projeto) {
+      return { success: false as const, message: "Projeto não encontrado." };
+    }
     const isMember = projeto.usuarioProjetos.length > 0;
     if (!isAdmin && !isMember) throw new Error("Sem permissão");
-    await prisma.projeto.delete({ where: { idProjeto: id } });
+    const sessoes = await prisma.sessaoDesenvolvimento.findMany({
+      where: { idProjeto: id },
+      select: { idSessao: true },
+    });
+    const tarefas = await prisma.tarefa.findMany({
+      where: { idProjeto: id },
+      select: { idTarefa: true },
+    });
+    const sessaoIds = sessoes.map((sessao: { idSessao: number }) => sessao.idSessao);
+    const tarefaIds = tarefas.map((tarefa: { idTarefa: number }) => tarefa.idTarefa);
+
+    await prisma.$transaction([
+      prisma.sessaoFerramenta.deleteMany({ where: { idSessao: { in: sessaoIds } } }),
+      prisma.avaliacaoSessao.deleteMany({ where: { idSessao: { in: sessaoIds } } }),
+      prisma.situacaoAtencao.deleteMany({ where: { idSessao: { in: sessaoIds } } }),
+      prisma.sessaoDesenvolvimento.deleteMany({ where: { idSessao: { in: sessaoIds } } }),
+      prisma.usuarioTarefa.deleteMany({ where: { idTarefa: { in: tarefaIds } } }),
+      prisma.tarefa.deleteMany({ where: { idTarefa: { in: tarefaIds } } }),
+      prisma.usuarioProjeto.deleteMany({ where: { idProjeto: id } }),
+      prisma.projeto.delete({ where: { idProjeto: id } }),
+    ]);
     revalidatePath("/projetos");
-    return;
+    return { success: true as const };
   }
 
   if (modelo === "sessao") {
     const sessao = await prisma.sessaoDesenvolvimento.findUnique({
       where: { idSessao: id },
     });
-    if (!sessao) return;
+    if (!sessao) {
+      return { success: false as const, message: "Sessão não encontrada." };
+    }
     if (!isAdmin && sessao.idUsuario !== usuario.idUsuario)
       throw new Error("Sem permissão");
-    await prisma.sessaoDesenvolvimento.delete({ where: { idSessao: id } });
+    await prisma.$transaction([
+      prisma.sessaoFerramenta.deleteMany({ where: { idSessao: id } }),
+      prisma.avaliacaoSessao.deleteMany({ where: { idSessao: id } }),
+      prisma.situacaoAtencao.deleteMany({ where: { idSessao: id } }),
+      prisma.sessaoDesenvolvimento.delete({ where: { idSessao: id } }),
+    ]);
     revalidatePath("/sessoes");
-    return;
+    return { success: true as const };
   }
 
   if (modelo === "tarefa") {
@@ -161,8 +208,23 @@ export async function excluirItem(formData: FormData) {
       where: { idTarefa: id, idUsuario: usuario.idUsuario },
     });
     if (!isAdmin && !vinculo) throw new Error("Sem permissão");
-    await prisma.tarefa.delete({ where: { idTarefa: id } });
+    const sessoes = await prisma.sessaoDesenvolvimento.findMany({
+      where: { idTarefa: id },
+      select: { idSessao: true },
+    });
+    const sessaoIds = sessoes.map((sessao: { idSessao: number }) => sessao.idSessao);
+
+    await prisma.$transaction([
+      prisma.sessaoFerramenta.deleteMany({ where: { idSessao: { in: sessaoIds } } }),
+      prisma.avaliacaoSessao.deleteMany({ where: { idSessao: { in: sessaoIds } } }),
+      prisma.situacaoAtencao.deleteMany({ where: { idSessao: { in: sessaoIds } } }),
+      prisma.sessaoDesenvolvimento.deleteMany({ where: { idSessao: { in: sessaoIds } } }),
+      prisma.usuarioTarefa.deleteMany({ where: { idTarefa: id } }),
+      prisma.tarefa.delete({ where: { idTarefa: id } }),
+    ]);
     revalidatePath("/tarefas");
-    return;
+    return { success: true as const };
   }
+
+  return { success: false as const, message: "Tipo de registro inválido." };
 }

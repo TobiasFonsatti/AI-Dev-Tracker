@@ -1,6 +1,6 @@
 "use client";
 
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { excluirItem } from "@/lib/actions/admin";
 
 /**
@@ -18,6 +18,7 @@ export default function DeleteButton({
   criadorId: number;
 }) {
   const [isPending, startTransition] = useTransition();
+  const [error, setError] = useState<string | null>(null);
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -26,9 +27,15 @@ export default function DeleteButton({
     );
     if (!ok) return;
     const form = e.currentTarget;
+    setError(null);
     startTransition(async () => {
       const data = new FormData(form);
-      await excluirItem(data);
+      try {
+        const result = await excluirItem(data);
+        if (!result.success) setError(result.message);
+      } catch {
+        setError("Não foi possível excluir o registro. Verifique se ele ainda possui dados relacionados.");
+      }
     });
   }
 
@@ -36,7 +43,7 @@ export default function DeleteButton({
   void criadorId;
 
   return (
-    <form onSubmit={handleSubmit} className="inline">
+    <form onSubmit={handleSubmit} className="inline-flex flex-col items-end gap-1">
       <input type="hidden" name="modelo" value={modelo} />
       <input type="hidden" name="id" value={String(id)} />
       <button
@@ -46,6 +53,7 @@ export default function DeleteButton({
       >
         {isPending ? "Excluindo…" : "Excluir"}
       </button>
+      {error && <span className="max-w-56 text-right text-[11px] text-red-600 dark:text-red-400">{error}</span>}
     </form>
   );
 }
