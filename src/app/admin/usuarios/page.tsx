@@ -18,6 +18,7 @@ export default async function AdminUsuariosPage() {
 
   return (
     <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-8 px-4 sm:px-6 py-10">
+      <Breadcrumbs />
       <div className="flex items-center gap-3 border-b border-slate-200/80 pb-6">
         <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-50 text-purple-600">
           <UsersIcon className="h-6 w-6" />
@@ -50,25 +51,10 @@ export default async function AdminUsuariosPage() {
                     <td className="py-3.5 px-4 font-semibold text-slate-900">{u.nome}</td>
                     <td className="py-3.5 px-4 text-slate-600 font-mono text-xs">{u.email}</td>
                     <td className="py-3.5 px-4">
-                      <span
-                        className={`inline-block px-2 py-0.5 rounded text-[11px] font-bold ${
-                          u.perfil.nome === "ADMINISTRADOR"
-                            ? "bg-purple-100 text-purple-700"
-                            : u.perfil.nome === "GESTOR"
-                            ? "bg-blue-100 text-blue-700"
-                            : "bg-emerald-100 text-emerald-700"
-                        }`}
-                      >
-                        {u.perfil.nome}
-                      </span>
+                      <span className={`inline-block px-2 py-0.5 rounded text-[11px] font-bold ${u.perfil.nome === "ADMINISTRADOR" ? "bg-purple-100 text-purple-700" : u.perfil.nome === "GESTOR" ? "bg-blue-100 text-blue-700" : "bg-emerald-100 text-emerald-700"}`}>{u.perfil.nome}</span>
                     </td>
                     <td className="py-3.5 px-4">
-                      <span
-                        className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold ${
-                          isAtivo
-                            ? "bg-emerald-50 text-emerald-700 border border-emerald-200/60"
-                            : "bg-slate-100 text-slate-500 border border-slate-200"
-                        }`}
+                      <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold ${isAtivo ? "bg-emerald-50 text-emerald-700 border border-emerald-200/60" : "bg-slate-100 text-slate-500 border border-slate-200"}`}
                       >
                         <span className={`w-1.5 h-1.5 rounded-full ${isAtivo ? "bg-emerald-500" : "bg-slate-400"}`} />
                         {u.status}
@@ -79,38 +65,20 @@ export default async function AdminUsuariosPage() {
                         <form action={alternarStatusUsuario}>
                           <input type="hidden" name="idUsuario" value={u.idUsuario} />
                           <input type="hidden" name="novoStatus" value={novoStatus} />
-                          <button
-                            type="submit"
-                            className={`rounded-lg px-3 py-1 text-xs font-semibold transition-all cursor-pointer ${
-                              isAtivo
-                                ? "bg-red-50 text-red-700 border border-red-200 hover:bg-red-100"
-                                : "bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100"
-                            }`}
-                          >
-                            {isAtivo ? "Desativar" : "Reativar"}
-                          </button>
+                          <button type="submit" className={`rounded-lg px-3 py-1 text-xs font-semibold transition-all cursor-pointer ${isAtivo ? "bg-red-50 text-red-700 border border-red-200 hover:bg-red-100" : "bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100"}`}>{isAtivo ? "Desativar" : "Reativar"}</button>
                         </form>
                         {canEditPerfil && (
                           <form action={alterarPerfilUsuario} className="mt-1">
                             <input type="hidden" name="idUsuario" value={u.idUsuario} />
-                            <select
-                              name="idPerfil"
-                              className="rounded border px-2 py-0.5 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            >
+                            <select name="idPerfil" className="rounded border px-2 py-0.5 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500">
                               {perfis.map((p) => (
-                                <option key={p.idPerfil} value={p.idPerfil} selected={p.idPerfil === u.perfil.idPerfil}>
-                                  {p.nome}
-                                </option>
+                                <option key={p.idPerfil} value={p.idPerfil} selected={p.idPerfil === u.perfil.idPerfil}>{p.nome}</option>
                               ))}
                             </select>
-                            <button
-                              type="submit"
-                              className="ml-2 rounded bg-blue-100 text-blue-800 px-2 py-0.5 text-xs hover:bg-blue-200"
-                            >
-                              Alterar
-                            </button>
+                            <button type="submit" className="ml-2 rounded bg-blue-100 text-blue-800 px-2 py-0.5 text-xs hover:bg-blue-200">Alterar</button>
                           </form>
                         )}
+                        <DeleteButton modelo="usuario" id={u.idUsuario} criadorId={u.idUsuario} />
                       </div>
                     </td>
                   </tr>

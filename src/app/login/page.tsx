@@ -85,7 +85,8 @@ export default async function LoginPage({
           </div>
         </div>
 
-        {/* Quick Demo Info Box for evaluators */}
+        {/* Créditos */}
+        <p className="text-xs text-center text-slate-500 mt-4">Feito por: Artur Ruiz e Tobias Fonsatti</p>
         <div className="mt-6 rounded-xl border border-slate-200/70 bg-slate-100/70 p-4 text-xs text-slate-600">
           <p className="font-semibold text-slate-700 mb-1 flex items-center gap-1.5">
             <span className="inline-block w-2 h-2 rounded-full bg-indigo-500"></span>

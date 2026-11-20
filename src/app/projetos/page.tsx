@@ -4,6 +4,8 @@ import { prisma } from "@/lib/prisma";
 import { getUsuarioAtual } from "@/lib/usuario-atual";
 import { criarProjeto } from "@/lib/actions/projetos";
 import { FolderIcon, PlusCircleIcon, ArrowRightIcon, AlertTriangleIcon } from "@/components/icons";
+import DeleteButton from "@/components/DeleteButton";
+import Breadcrumbs from "@/components/Breadcrumbs";
 
 export default async function ProjetosPage({
   searchParams,
@@ -22,6 +24,7 @@ export default async function ProjetosPage({
 
   return (
     <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-8 px-4 sm:px-6 py-10">
+      <Breadcrumbs />
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200/80 pb-6">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-slate-900">Meus Projetos</h1>
@@ -53,35 +56,37 @@ export default async function ProjetosPage({
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {projetos.map((p) => (
-                <Link
-                  key={p.idProjeto}
-                  href={`/projetos/${p.idProjeto}`}
-                  className="group relative flex flex-col justify-between rounded-2xl border border-slate-200/90 bg-white p-5 shadow-xs hover:border-indigo-300 hover:shadow-md transition-all"
-                >
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
-                        <FolderIcon className="w-4 h-4" />
+                <div key={p.idProjeto} className="flex flex-col space-y-2">
+                  <Link
+                    href={`/projetos/${p.idProjeto}`}
+                    className="group relative flex flex-col justify-between rounded-2xl border border-slate-200/90 bg-white p-5 shadow-xs hover:border-indigo-300 hover:shadow-md transition-all"
+                  >
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                          <FolderIcon className="w-4 h-4" />
+                        </div>
+                        <span className="rounded-md bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600">
+                          {p._count.tarefas} {p._count.tarefas === 1 ? "tarefa" : "tarefas"}
+                        </span>
                       </div>
-                      <span className="rounded-md bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600">
-                        {p._count.tarefas} {p._count.tarefas === 1 ? "tarefa" : "tarefas"}
+                      <h3 className="font-semibold text-slate-900 group-hover:text-indigo-600 transition-colors">
+                        {p.nome}
+                      </h3>
+                      <p className="text-xs text-slate-500 line-clamp-2 mt-1">
+                        {p.descricao || "Sem descrição informada."}
+                      </p>
+                    </div>
+
+                    <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
+                      <span>Criado em {new Date(p.dataCriacao).toLocaleDateString("pt-BR")}</span>
+                      <span className="flex items-center gap-1 font-medium text-indigo-600 group-hover:translate-x-0.5 transition-transform">
+                        Acessar <ArrowRightIcon className="w-3 h-3" />
                       </span>
                     </div>
-                    <h3 className="font-semibold text-slate-900 group-hover:text-indigo-600 transition-colors">
-                      {p.nome}
-                    </h3>
-                    <p className="text-xs text-slate-500 line-clamp-2 mt-1">
-                      {p.descricao || "Sem descrição informada."}
-                    </p>
-                  </div>
-
-                  <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
-                    <span>Criado em {new Date(p.dataCriacao).toLocaleDateString("pt-BR")}</span>
-                    <span className="flex items-center gap-1 font-medium text-indigo-600 group-hover:translate-x-0.5 transition-transform">
-                      Acessar <ArrowRightIcon className="w-3 h-3" />
-                    </span>
-                  </div>
-                </Link>
+                  </Link>
+                  <DeleteButton modelo="projeto" id={p.idProjeto} criadorId={usuario.idUsuario} />
+                </div>
               ))}
             </div>
           )}
