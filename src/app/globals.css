@@ -42,51 +42,53 @@ textarea:focus {
 }
 
 /* ============================================================
-   DARK THEME COMPREHENSIVE RULES
-   Garante funcionamento real e imediato em todas as páginas
+   DARK THEME — Paleta estilo GitHub Dark (melhor legibilidade)
    ============================================================ */
 
 .dark {
   color-scheme: dark;
 }
 
+/* ── Fundo geral ── */
 .dark body {
-  background-color: #0b0f19 !important;
-  color: #f1f5f9 !important;
+  background-color: #0d1117 !important;
+  color: #e6edf3 !important;
 }
 
-/* Headers & Footers */
+/* ── Header ── */
 .dark header {
-  background-color: rgba(17, 24, 39, 0.85) !important;
-  border-color: #1f2937 !important;
+  background-color: rgba(13, 17, 23, 0.95) !important;
+  border-color: #21262d !important;
 }
 
+/* ── Footer ── */
 .dark footer {
-  background-color: rgba(15, 23, 42, 0.7) !important;
-  border-color: #1f2937 !important;
-  color: #64748b !important;
+  background-color: rgba(13, 17, 23, 0.85) !important;
+  border-color: #21262d !important;
+  color: #8b949e !important;
 }
 
-/* Cards & Surfaces */
+/* ── Cards / superfícies brancas ── */
 .dark .bg-white {
-  background-color: #111827 !important;
-  color: #f8fafc !important;
+  background-color: #161b22 !important;
+  color: #e6edf3 !important;
 }
 
+/* ── Fundos slate leves ── */
 .dark .bg-slate-50,
 .dark .bg-slate-50\/50,
 .dark .bg-slate-50\/60,
 .dark .bg-slate-50\/70,
 .dark .bg-slate-50\/80 {
-  background-color: #182235 !important;
+  background-color: #1c2333 !important;
 }
 
 .dark .bg-slate-100,
 .dark .bg-slate-100\/70 {
-  background-color: #1e293b !important;
+  background-color: #21262d !important;
 }
 
-/* Borders */
+/* ── Bordas ── */
 .dark .border-slate-100,
 .dark .border-slate-200,
 .dark .border-slate-200\/60,
@@ -94,30 +96,30 @@ textarea:focus {
 .dark .border-slate-200\/80,
 .dark .border-slate-200\/90,
 .dark .border-slate-300 {
-  border-color: #1f2937 !important;
+  border-color: #30363d !important;
 }
 
 .dark .divide-slate-100 > :not([hidden]) ~ :not([hidden]) {
-  border-color: #1f2937 !important;
+  border-color: #21262d !important;
 }
 
-/* Text colors */
+/* ── Textos ── */
 .dark .text-slate-900,
 .dark .text-slate-800,
 .dark .text-slate-700 {
-  color: #f8fafc !important;
+  color: #e6edf3 !important;
 }
 
 .dark .text-slate-600,
 .dark .text-slate-500 {
-  color: #94a3b8 !important;
+  color: #8b949e !important;
 }
 
 .dark .text-slate-400 {
-  color: #64748b !important;
+  color: #6e7681 !important;
 }
 
-/* Forms & Inputs */
+/* ── Formulários & Inputs ── */
 .dark input[type="text"],
 .dark input[type="email"],
 .dark input[type="password"],
@@ -125,70 +127,148 @@ textarea:focus {
 .dark input[type="date"],
 .dark select,
 .dark textarea {
-  background-color: #182235 !important;
-  color: #f8fafc !important;
-  border-color: #334155 !important;
+  background-color: #0d1117 !important;
+  color: #e6edf3 !important;
+  border-color: #30363d !important;
 }
 
 .dark input::placeholder,
 .dark textarea::placeholder {
-  color: #64748b !important;
+  color: #484f58 !important;
 }
 
-/* Tables */
+.dark input:focus,
+.dark select:focus,
+.dark textarea:focus {
+  border-color: #58a6ff !important;
+  box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.15) !important;
+}
+
+/* ── Tabelas ── */
 .dark thead {
-  background-color: #182235 !important;
-  color: #94a3b8 !important;
+  background-color: #161b22 !important;
+  color: #8b949e !important;
 }
 
 .dark tbody tr:hover {
-  background-color: rgba(30, 41, 59, 0.45) !important;
+  background-color: rgba(33, 38, 45, 0.7) !important;
 }
 
-/* Red / Danger Alerts */
+/* ── Alertas Vermelhos ── */
 .dark .bg-red-50,
 .dark .bg-red-50\/60,
 .dark .bg-red-50\/80 {
-  background-color: rgba(69, 10, 10, 0.35) !important;
-  border-color: rgba(185, 28, 28, 0.4) !important;
+  background-color: rgba(88, 7, 7, 0.35) !important;
+  border-color: rgba(248, 81, 73, 0.4) !important;
 }
 .dark .text-red-900,
 .dark .text-red-800,
-.dark .text-red-700 {
-  color: #fca5a5 !important;
+.dark .text-red-700,
+.dark .text-red-600 {
+  color: #ff7b72 !important;
+}
+.dark .border-red-200,
+.dark .border-red-200\/80 {
+  border-color: rgba(248, 81, 73, 0.35) !important;
 }
 
-/* Amber / Warning Alerts */
+/* ── Botão Excluir / Desativar ── */
+.dark .bg-red-100 {
+  background-color: rgba(88, 7, 7, 0.4) !important;
+}
+.dark .text-red-700 {
+  color: #ff7b72 !important;
+}
+.dark .hover\:bg-red-100:hover {
+  background-color: rgba(88, 7, 7, 0.6) !important;
+}
+
+/* ── Alertas Âmbar ── */
 .dark .bg-amber-50,
 .dark .bg-amber-50\/80 {
-  background-color: rgba(69, 39, 0, 0.35) !important;
-  border-color: rgba(180, 83, 9, 0.4) !important;
+  background-color: rgba(70, 40, 0, 0.4) !important;
+  border-color: rgba(210, 120, 0, 0.4) !important;
 }
 .dark .text-amber-900,
 .dark .text-amber-800,
 .dark .text-amber-700 {
-  color: #fcd34d !important;
+  color: #e3b341 !important;
 }
 
-/* Emerald / Success */
+/* ── Emerald / Sucesso / Ativo ── */
 .dark .bg-emerald-50 {
-  background-color: rgba(6, 78, 59, 0.3) !important;
-  border-color: rgba(16, 185, 129, 0.3) !important;
+  background-color: rgba(4, 61, 44, 0.3) !important;
+  border-color: rgba(35, 197, 143, 0.3) !important;
 }
 .dark .text-emerald-800,
 .dark .text-emerald-700 {
-  color: #6ee7b7 !important;
+  color: #3fb950 !important;
+}
+.dark .border-emerald-200\/60 {
+  border-color: rgba(63, 185, 80, 0.3) !important;
+}
+.dark .bg-emerald-500 {
+  background-color: #3fb950 !important;
+}
+/* Botão Reativar */
+.dark .bg-emerald-100 {
+  background-color: rgba(4, 61, 44, 0.4) !important;
+}
+.dark .hover\:bg-emerald-100:hover {
+  background-color: rgba(4, 61, 44, 0.65) !important;
 }
 
-/* Indigo Tinted Elements */
+/* ── Indigo / Links ── */
 .dark .bg-indigo-50,
 .dark .bg-indigo-50\/60,
 .dark .bg-indigo-50\/80,
 .dark .bg-indigo-50\/30 {
-  background-color: rgba(49, 46, 129, 0.25) !important;
-  border-color: rgba(99, 102, 241, 0.3) !important;
+  background-color: rgba(31, 35, 100, 0.3) !important;
+  border-color: rgba(88, 166, 255, 0.25) !important;
 }
 .dark .text-indigo-600,
 .dark .text-indigo-700 {
-  color: #a5b4fc !important;
+  color: #79c0ff !important;
+}
+.dark .hover\:border-indigo-300:hover {
+  border-color: #58a6ff !important;
+}
+.dark .hover\:text-indigo-600:hover {
+  color: #79c0ff !important;
+}
+
+/* ── Purple / Admin badges ── */
+.dark .bg-purple-50,
+.dark .bg-purple-100 {
+  background-color: rgba(60, 20, 90, 0.45) !important;
+}
+.dark .text-purple-700,
+.dark .text-purple-600 {
+  color: #d2a8ff !important;
+}
+
+/* ── Blue / Gestor badges ── */
+.dark .bg-blue-100 {
+  background-color: rgba(10, 40, 80, 0.5) !important;
+}
+.dark .text-blue-700,
+.dark .text-blue-800 {
+  color: #79c0ff !important;
+}
+.dark .hover\:bg-blue-200:hover {
+  background-color: rgba(10, 40, 80, 0.75) !important;
+}
+
+/* ── Hover genérico em cards ── */
+.dark .hover\:bg-slate-50\/60:hover,
+.dark .hover\:bg-slate-50:hover {
+  background-color: rgba(28, 35, 51, 0.6) !important;
+}
+
+/* ── Bordas dashed (empty state) ── */
+.dark .border-dashed.border-slate-300 {
+  border-color: #30363d !important;
+}
+.dark .bg-white\/50 {
+  background-color: rgba(22, 27, 34, 0.5) !important;
 }
