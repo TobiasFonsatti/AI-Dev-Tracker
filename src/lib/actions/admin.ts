@@ -19,6 +19,36 @@ export async function alternarStatusUsuario(formData: FormData) {
 
   revalidatePath("/admin/usuarios");
 }
+// New action to change user profile (role) by admin
+export async function alterarPerfilUsuario(formData: FormData) {
+  await exigirAdmin();
+
+  const idUsuario = Number(formData.get("idUsuario"));
+  const idPerfil = Number(formData.get("idPerfil"));
+  if (!idUsuario || !idPerfil) return;
+
+  // Fetch target user with current profile
+  const target = await prisma.usuario.findUnique({
+    where: { idUsuario },
+    include: { perfil: true },
+  });
+  if (!target) return;
+
+  // Prevent changing other admins or elevating to admin
+  if (target.perfil.nome === "ADMINISTRADOR") return;
+
+  const newPerfil = await prisma.perfil.findUnique({ where: { idPerfil } });
+  if (!newPerfil) return;
+  if (newPerfil.nome === "ADMINISTRADOR") return;
+
+  await prisma.usuario.update({
+    where: { idUsuario },
+    data: { perfilId: idPerfil },
+  });
+
+  revalidatePath("/admin/usuarios");
+}
+
 
 export async function associarPermissao(formData: FormData) {
   await exigirAdmin();

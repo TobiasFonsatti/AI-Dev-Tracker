@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { exigirAdmin } from "@/lib/usuario-atual";
-import { alternarStatusUsuario } from "@/lib/actions/admin";
+import { alternarStatusUsuario, alterarPerfilUsuario } from "@/lib/actions/admin";
 import { UsersIcon } from "@/components/icons";
 
 export default async function AdminUsuariosPage() {
@@ -9,6 +9,10 @@ export default async function AdminUsuariosPage() {
   const usuarios = await prisma.usuario.findMany({
     include: { perfil: true },
     orderBy: { idUsuario: "asc" },
+  });
+
+  const perfis = await prisma.perfil.findMany({
+    orderBy: { idPerfil: "asc" },
   });
 
   return (
@@ -39,6 +43,7 @@ export default async function AdminUsuariosPage() {
               {usuarios.map((u) => {
                 const novoStatus = u.status === "ATIVO" ? "INATIVO" : "ATIVO";
                 const isAtivo = u.status === "ATIVO";
+                const canEditPerfil = u.perfil.nome !== "ADMINISTRADOR";
                 return (
                   <tr key={u.idUsuario} className="hover:bg-slate-50/60 transition-colors">
                     <td className="py-3.5 px-4 font-semibold text-slate-900">{u.nome}</td>
@@ -69,20 +74,43 @@ export default async function AdminUsuariosPage() {
                       </span>
                     </td>
                     <td className="py-3.5 px-4 text-right">
-                      <form action={alternarStatusUsuario}>
-                        <input type="hidden" name="idUsuario" value={u.idUsuario} />
-                        <input type="hidden" name="novoStatus" value={novoStatus} />
-                        <button
-                          type="submit"
-                          className={`rounded-lg px-3 py-1 text-xs font-semibold transition-all cursor-pointer ${
-                            isAtivo
-                              ? "bg-red-50 text-red-700 border border-red-200 hover:bg-red-100"
-                              : "bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100"
-                          }`}
-                        >
-                          {isAtivo ? "Desativar" : "Reativar"}
-                        </button>
-                      </form>
+                      <div className="flex flex-col items-end space-y-1">
+                        <form action={alternarStatusUsuario}>
+                          <input type="hidden" name="idUsuario" value={u.idUsuario} />
+                          <input type="hidden" name="novoStatus" value={novoStatus} />
+                          <button
+                            type="submit"
+                            className={`rounded-lg px-3 py-1 text-xs font-semibold transition-all cursor-pointer ${
+                              isAtivo
+                                ? "bg-red-50 text-red-700 border border-red-200 hover:bg-red-100"
+                                : "bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100"
+                            }`}
+                          >
+                            {isAtivo ? "Desativar" : "Reativar"}
+                          </button>
+                        </form>
+                        {canEditPerfil && (
+                          <form action={alterarPerfilUsuario} className="mt-1">
+                            <input type="hidden" name="idUsuario" value={u.idUsuario} />
+                            <select
+                              name="idPerfil"
+                              className="rounded border px-2 py-0.5 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                              {perfis.map((p) => (
+                                <option key={p.idPerfil} value={p.idPerfil} selected={p.idPerfil === u.perfil.idPerfil}>
+                                  {p.nome}
+                                </option>
+                              ))}
+                            </select>
+                            <button
+                              type="submit"
+                              className="ml-2 rounded bg-blue-100 text-blue-800 px-2 py-0.5 text-xs hover:bg-blue-200"
+                            >
+                              Alterar
+                            </button>
+                          </form>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 );

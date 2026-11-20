@@ -98,3 +98,4 @@ export default function NavLinks({ perfilNome }: { perfilNome: string }) {
     </nav>
   );
 }
+
